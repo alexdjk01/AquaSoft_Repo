@@ -274,7 +274,11 @@ function printer(message) {
         console.log("inner function: ", message2);
     };
 }
-var letsPrint = printer("This is the main function!");
+var letsPrint = printer("This is the main function!"); //even if the main function stoped executing, we can access the inner function later
 letsPrint("This is the inner function!");
-console.log("Output from Promise and await incoming.....................");
-console.log("\n ---------------- Task9 (React hooks) ----------------");
+//console.log("\n ---------------- Task9 (React hooks) ----------------");
+// useState React hook adds state to components.
+// used for managing and updating component variables of the functional components. Triggers re-renders when their values have changed
+// useRef references values that are not needed to re-render. Used to store mutable values
+//!!! Made a react-app component in order to test useState, useRef.
+console.log("\n\nOutput from Promise and await incoming.....................");

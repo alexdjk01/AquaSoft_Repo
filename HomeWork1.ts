@@ -229,23 +229,22 @@ examplePromise.then(
 
   displayData();
 
-  
 console.log("\n ---------------- Task8 (Closures) ----------------");
 
-function printer(message:string){
-    return function insidePrinter(message2:string)
+function printer(message:string){   //main function
+    return function insidePrinter(message2:string)  //inner function
     {
         console.log("main function: " , message);
         console.log("inner function: ", message2);
     }
 }
 
-const letsPrint = printer("This is the main function!");
+const letsPrint = printer("This is the main function!");    //even if the main function stoped executing, we can access the inner function later
 letsPrint("This is the inner function!");
 
-
-console.log("\n ---------------- Task9 (React hooks) ----------------");
-// useState React hook adds state to components. 
-
-
-console.log("Output from Promise and await incoming.....................");
+//console.log("\n ---------------- Task9 (React hooks) ----------------");
+// useState React hook adds state to components.
+// used for managing and updating component variables of the functional components. Triggers re-renders when their values have changed
+// useRef references values that are not needed to re-render. Used to store mutable values
+//!!! Made a react-app component in order to test useState, useRef.
+console.log("\n\nOutput from Promise and await incoming.....................");
