@@ -1,7 +1,7 @@
 
 .background {
-  background-color: rgb(53, 53, 125); /* The desired background color */
-  color: white; /* Optional: white text for better contrast */
+  background-color: rgb(53, 53, 125); 
+  color: white; 
   height: 700px;
 }
 
