@@ -50,7 +50,7 @@ console.log(someFunctionArrowMultipleLines(2,3));
 console.log("\n ----- Classes");
 class Circle{
     private radius:number; // in typescript we need to explicitly declare the type
-    constructor(radius){
+    constructor(radius:number){
         this.radius=radius;
     }
 
@@ -65,8 +65,8 @@ console.log(circle.calculateArea());
 
 //We can extends a certain class
 class ColoredCircle extends Circle{ // extends a certain class (base class or not) 
-    private color:number;
-    constructor(color,radius){
+    private color:string;
+    constructor(color:string,radius:number){
         super(radius);  //call the base class constructor with the radius attribute
         this.color=color;   // extra atributte specific to the ColoredCircle class
     }
