@@ -1,6 +1,7 @@
 import {Controller,Get,Post,Put,Delete,Param,Body,UseGuards,} from '@nestjs/common';
 import { HotelsService } from '../services/hotels.service';
 import { Hotel } from '../models/hotel.model';
+import { JwtAuthGuard } from '../auth/jwtAuthentification.guard';
 
 
 @Controller('hotels')
@@ -18,15 +19,13 @@ findByName(@Param('name') name: string): Promise<Hotel> {
 }
 
 @Post()
+@UseGuards(JwtAuthGuard) //private route
 create(@Body() hotelData: Partial<Hotel>): Promise<Hotel> {
     return this.hotelsService.create(hotelData);
 }
 
 @Put(':id')
-update(
-    @Param('id') id: number,
-    @Body() hotelData: Partial<Hotel>,
-): Promise<Hotel> {
+update(@Param('id') id: number, @Body() hotelData: Partial<Hotel>,): Promise<Hotel> {
     return this.hotelsService.update(id, hotelData);
 }
 

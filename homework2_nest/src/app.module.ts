@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { HotelsModule } from './modules/hotels.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { HotelsModule } from './modules/hotels.module';
       synchronize: true,
     }),
     HotelsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
