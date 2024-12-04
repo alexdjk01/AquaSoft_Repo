@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { HotelsService } from '../services/hotels.service';
-import { HotelsController } from '../controllers/hotels.controller';
-import { Hotel } from '../models/hotel.model';
-import { City } from '../models/city.model';
-import { Region } from '../models/region.model';
-import { Zone } from '../models/zone.model';
+import { HotelsService } from '../services/hotels.service.js';
+import { HotelsController } from '../controllers/hotels.controller.js';
+import { Hotel } from '../models/hotel.model.js';
+import { City } from '../models/city.model.js';
+import { Region } from '../models/region.model.js';
+import { Zone } from '../models/zone.model.js';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtAuthGuard } from '../auth/jwtAuthentification.guard';
+import { JwtAuthGuard } from '../auth/jwtAuthentification.guard.js';
 
 @Module({
   imports: [

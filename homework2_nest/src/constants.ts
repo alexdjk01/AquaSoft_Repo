@@ -1,0 +1,9 @@
+export const JWT_SECRET_KEY = 'encodingKeyAlex';
+export const JWT_USERNAME = 'alex';
+export const JWT_PASSWORDE = 'alex1234';
+export const DB_DIALECT = 'mysql';
+export const DB_HOST='localhost';
+export const DB_USERNAME='root';
+export const DB_PASSWORD='root';
+export const DB_PORT = 3306;
+export const DB_NAME='practice_hm2';

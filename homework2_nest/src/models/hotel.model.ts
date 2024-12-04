@@ -1,6 +1,6 @@
 import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,BelongsTo ,} from 'sequelize-typescript';
-  import { Region } from './region.model';
-  import { City } from './city.model';
+  import { Region } from './region.model.js';
+  import { City } from './city.model.js';
   
   @Table({
     tableName: 'Hotels',

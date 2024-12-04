@@ -1,5 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JWT_SECRET_KEY } from '../constants.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -15,7 +16,7 @@ export class JwtAuthGuard implements CanActivate {
 
     const token = authHeader.split(' ')[1]; // Extracts the token
     try {
-      const decoded = this.jwtService.verify(token, { secret: 'encodingKeyAlex' }); //if token matches the hardcoded token
+      const decoded = this.jwtService.verify(token, { secret: JWT_SECRET_KEY }); //if token matches the saved token
       request.user = decoded; // Attach user payload to request ( the request can be used in routes controllers for verifications,etc.)
       return true;    //token is ok
     } catch (error) {

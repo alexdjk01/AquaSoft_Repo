@@ -1,7 +1,7 @@
 import {Controller,Get,Post,Put,Delete,Param,Body,UseGuards,} from '@nestjs/common';
-import { HotelsService } from '../services/hotels.service';
-import { Hotel } from '../models/hotel.model';
-import { JwtAuthGuard } from '../auth/jwtAuthentification.guard';
+import { HotelsService } from '../services/hotels.service.js';
+import { Hotel } from '../models/hotel.model.js';
+import { JwtAuthGuard } from '../auth/jwtAuthentification.guard.js';
 
 
 @Controller('hotels')

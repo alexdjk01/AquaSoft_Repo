@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './authentification.controller';
-import { AuthService } from './authentification.service';
+import { AuthController } from './authentification.controller.js';
+import { AuthService } from './authentification.service.js';
 import { JwtModule } from '@nestjs/jwt';
+import { JWT_SECRET_KEY } from '../constants.js';
 
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'encodingKeyAlex', 
-      signOptions: { expiresIn: '1h' }, // expires in 1h after creation
+      secret: JWT_SECRET_KEY, 
+      signOptions: { expiresIn: '10min' }, // expires in 10min after creation
     }),
   ],
   controllers: [AuthController],

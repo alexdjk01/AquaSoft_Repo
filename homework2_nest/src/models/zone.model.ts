@@ -1,5 +1,5 @@
 import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,} from 'sequelize-typescript';
-  import { Region } from './region.model';
+  import { Region } from './region.model.js';
   
   @Table({
     tableName: 'Zones',
