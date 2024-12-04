@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { HotelsModule } from './hotels/hotels.module';
+import { HotelsModule } from './modules/hotels.module';
 
 @Module({
   imports: [

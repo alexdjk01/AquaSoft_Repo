@@ -1,6 +1,6 @@
 import {Controller,Get,Post,Put,Delete,Param,Body,UseGuards,} from '@nestjs/common';
-import { HotelsService } from './hotels.service';
-import { Hotel } from './hotel.model';
+import { HotelsService } from '../services/hotels.service';
+import { Hotel } from '../models/hotel.model';
 
 
 @Controller('hotels')

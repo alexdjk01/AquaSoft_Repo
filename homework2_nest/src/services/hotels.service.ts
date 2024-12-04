@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Hotel } from './hotel.model';
+import { Hotel } from '../models/hotel.model';
 
 @Injectable()
 export class HotelsService {
