@@ -1,7 +1,6 @@
 
 // Solutions for the questions
 console.log("\n Starting internship practice ...");
-
 console.log("\n ---------------- Task1 (Methods) + Task 2 (var,let,const)----------------");
 // Main differences between ES5 and ES6 are : Introduced let, const (var is present in ES5), arrow functions,
 // string interpolation, classes, import/export withoud require, spread and rest operators, Promises.
@@ -13,8 +12,8 @@ firstVariable = 10; //can be reassigned
 console.log(firstVariable); 
 
 //LET
-//let secondVariable; // error of syntax. We need to specifiy the value;
-let secondVariable:string = 'Alex'; // or Typescript let secondVariable : string = "Alex";
+let secondVariable:string;
+secondVariable = 'Marius'; //reasigned
 let alwaysTrue: boolean = true;
 if(alwaysTrue) //always true in order to check the block property of "let"
 {
@@ -31,14 +30,14 @@ const thirdVariable:number = 10; // a constant variable needs to be initialized 
 //same as the let type, it exists only in the block of code in which it is defined.
 
 //Traditional functions
-function sumFunctionTraditional(param1:number,param2:number){
+function sumFunctionTraditional(param1:number,param2:number):number{
     return param1+param2;
 }
 
 //Arrow Functions
 console.log("\n ----- Arrow Functions");
-let sumFunctionArrow = (param1:number, param2:number) => param1+param2; //simpler than traditional functions.
-let someFunctionArrowMultipleLines = (param1:number, param2:number) =>{
+let sumFunctionArrow = (param1:number, param2:number):number => param1+param2; //simpler than traditional functions.
+let someFunctionArrowMultipleLines = (param1:number, param2:number):number =>{
     let result = param1*100 + param2*100;
     return result;
 }
@@ -49,12 +48,12 @@ console.log(someFunctionArrowMultipleLines(2,3));
 //Classes
 console.log("\n ----- Classes");
 class Circle{
-    private radius:number; // in typescript we need to explicitly declare the type
+    private radius:number; // private ES6
     constructor(radius:number){
         this.radius=radius;
     }
 
-    calculateArea()
+    calculateArea():number
     {
         return Math.pow(this.radius,2) * Math.PI; //Math.pow (power) raises the first parameter to the power specified in the second parameter.
     }
@@ -71,7 +70,7 @@ class ColoredCircle extends Circle{ // extends a certain class (base class or no
         this.color=color;   // extra atributte specific to the ColoredCircle class
     }
 
-    fillCircle()
+    fillCircle():string
     {
         return `The circle with area equal to ${this.calculateArea()} has been colored in ${this.color} !`;
     }
@@ -140,10 +139,6 @@ studentArray.forEach(element => {
 //Simple objects can be deep-copied with Json
 const deepCopyJson = JSON.parse(JSON.stringify(studentOne));
 console.log(deepCopyJson);
-//For complex objects (that may contain methods we can use an external library)
-const _ = require('lodash'); // can be replaced by import if we work inside a module
-const deepCopyImport = _.cloneDeep(coloredCircle);
-console.log(deepCopyImport);
 
 //Spread on arrays:
 console.log("\n ----- Spread");

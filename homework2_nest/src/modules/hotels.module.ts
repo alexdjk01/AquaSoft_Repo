@@ -7,13 +7,13 @@ import { City } from '../models/city.model.js';
 import { Region } from '../models/region.model.js';
 import { Zone } from '../models/zone.model.js';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtAuthGuard } from '../auth/jwtAuthentification.guard.js';
+import { JWT_SECRET_KEY } from '../constants.js';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([Hotel, City, Region, Zone]),
     JwtModule.register({
-      secret: 'encodingKeyAlex', // Use the same secret key as in AuthService
+      secret: JWT_SECRET_KEY, 
       signOptions: { expiresIn: '1h' },
     }),
   ],

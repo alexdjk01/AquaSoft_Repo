@@ -12,29 +12,29 @@ const app = express();
 
 const startServer = async () => {
   try {
-    // We will authenticate the connection to the MySql database
-    await sequelize.authenticate();
+    // MySQL connection
+    await sequelize.authenticate(); //Test the connection to the DB.
     console.log("Database connection has been established with success.");
 
-    // Initialize models and relationships
+    // Initialize Models and thier relationship and sync them with the database | test if the data can be received from DB
     await initializeModels();
     await testFetchData();
 
-   // Configure middleware
+   // Configure middleware that parses JSON bodies in order to handle API requests
    app.use(express.json()); // Parse JSON bodies
 
-   // Define routes
+   // Define routes ( in this example we have just the hotels route )
    app.use("/hotels", hotelRoutes);
 
-   // Start the server
+   // Start the server on specific port taken from .env file
    app.listen(APP_PORT, () => {
      console.log(`Server running on http://localhost:${APP_PORT}`);
    });  
     
-    // Application
+    // If everything works, application is ready and working.
     console.log("Application is now ready.");
   } catch (error) {
-    console.error("Failed to start the application:", error);
+    console.error( error);
     process.exit(1); // Exit the process if initialization fails
   }
 };
