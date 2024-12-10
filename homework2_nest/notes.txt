@@ -1,0 +1,3 @@
+Hotels table : Foreign Keys: fk_hotes_cityID; fk_hotels_regionID;
+Zones table : Foreign Key: fk_zones_regionID;
+Airports table : Foreign Key : fk_airports_cityID;
