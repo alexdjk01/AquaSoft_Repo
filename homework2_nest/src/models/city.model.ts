@@ -19,4 +19,6 @@ export class City extends Model {
 
   @HasMany(() => Hotel)
   Hotels: Hotel[];
+
+  //maybe a has many airports
 }

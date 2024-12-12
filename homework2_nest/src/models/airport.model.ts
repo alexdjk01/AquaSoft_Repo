@@ -6,7 +6,7 @@ import { City } from './city.model.js';
     timestamps:false,
 })
 
-export class Airports extends Model{
+export class Airport extends Model{
 
     @PrimaryKey
     @AutoIncrement
@@ -29,10 +29,10 @@ export class Airports extends Model{
     TimeZone:string;            // GMT Time zone for where the Airport is located.
 
     @Column
-    Latitude:number;
+    Latitude:string;            //DECIMALS are imported into TS/JS as STRING
 
     @Column
-    Longitude:number;
+    Longitude:string;           //DECIMALS are imported into TS/JS as STRING
 
     @ForeignKey( () => City)
     @Column

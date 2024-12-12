@@ -1,6 +1,8 @@
-import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,BelongsTo ,} from 'sequelize-typescript';
-  import { Region } from './region.model.js';
-  import { City } from './city.model.js';
+import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,BelongsTo, HasMany} from 'sequelize-typescript';
+import { Region } from './region.model.js';
+import { City } from './city.model.js';
+import { Hotel_Group } from './hotel_group.model.js';
+import { Price_Offer } from './price_offer.model.js';
   
   @Table({
     tableName: 'Hotels',
@@ -16,10 +18,10 @@ import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,BelongsTo ,} from
     HotelName: string;
   
     @Column
-    Latitude: number;
+    Latitude: string;     //DECIMALS are imported into TS/JS as STRING
   
     @Column
-    Longitude: number;
+    Longitude: string;    //DECIMALS are imported into TS/JS as STRING
   
     @ForeignKey(() => Region)
     @Column
@@ -28,6 +30,10 @@ import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,BelongsTo ,} from
     @ForeignKey(() => City)
     @Column
     CityID: number;
+
+    @ForeignKey( () => Hotel_Group)
+    @Column
+    GroupID: number;
   
     @Column
     Address: string;
@@ -37,5 +43,11 @@ import {Table,Column,Model,PrimaryKey,AutoIncrement,ForeignKey,BelongsTo ,} from
   
     @BelongsTo(() => Region)
     Region: Region;
+
+    @BelongsTo(()=> Hotel_Group)
+    Hotel_Group: Hotel_Group;
+
+    @HasMany( () => Price_Offer)
+    Price_Offers:Price_Offer[];
   }
   
