@@ -22,7 +22,7 @@ export class UsersService {
     }
 
     //Method the retrieved a user with the username specified
-    async findByName(username: string): Promise<User> {
+    async findByUserName(username: string): Promise<User> {
         const user = await this.usersModel.findOne({ where: { Username: username } });
         if (!user) {
             throw new NotFoundException('User not found');

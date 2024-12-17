@@ -1,4 +1,5 @@
-import {Table,Column,Model,PrimaryKey,AutoIncrement,} from 'sequelize-typescript';
+import {Table,Column,Model,PrimaryKey,AutoIncrement, HasMany,} from 'sequelize-typescript';
+import { User } from './user.model.js';
   
   @Table({
     tableName: 'Roles',
@@ -15,5 +16,8 @@ import {Table,Column,Model,PrimaryKey,AutoIncrement,} from 'sequelize-typescript
   
     @Column
     Description: string;
+    
+    @HasMany(() => User) 
+    Users: User[];
   }
   

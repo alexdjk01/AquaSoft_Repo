@@ -22,5 +22,6 @@ import { Hotel_Group } from '../models/hotel_group.model.js';
   ],
   providers: [HotelsService],
   controllers: [HotelsController],
+  exports: [HotelsService]
 })
 export class HotelsModule {}

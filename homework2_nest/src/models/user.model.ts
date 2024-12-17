@@ -46,7 +46,7 @@ export class User extends Model{
     @BelongsTo( ()=> Hotel_Group)
     Hotel_Group:Hotel_Group;
 
-    @HasOne( ()=>Role)
+    @BelongsTo( ()=>Role)
     Role:Role;
 
 }

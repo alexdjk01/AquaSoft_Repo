@@ -1,1 +1,4 @@
-Task1: Models for role and permission
+Task1: 
+Models for role and permission
+Created user Module
+Created user controller

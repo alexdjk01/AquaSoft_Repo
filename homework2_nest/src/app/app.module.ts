@@ -10,6 +10,10 @@ import { Zone } from '../models/zone.model.js';
 import { Region } from '../models/region.model.js';
 import { Airport } from '../models/airport.model.js';
 import { Price_Offer } from '../models/price_offer.model.js';
+import { User } from '../models/user.model.js';
+import { Role } from '../models/role.model.js';
+import { Permission } from '../models/permission.model.js';
+import { UsersModule } from '../modules/users.module.js';
 
 
 @Module({
@@ -21,12 +25,13 @@ import { Price_Offer } from '../models/price_offer.model.js';
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      models: [Hotel,Hotel_Group, City, Zone, Region, Airport, Price_Offer],
+      models: [Hotel,Hotel_Group, City, Zone, Region, Airport, Price_Offer, User, Role, Permission],
       autoLoadModels: true,
       synchronize: true,
     }),
     HotelsModule,
     AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
