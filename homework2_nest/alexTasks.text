@@ -1,2 +1,3 @@
 Task1 : 
-        Create Users model and link it to the Sequelize module
+        Created Users model and link it to the Sequelize module
+        Created User Service 

@@ -4,7 +4,6 @@ import { Hotel } from '../models/hotel.model.js';
 import { Airport } from '../models/airport.model.js';
 import { Price_Offer } from '../models/price_offer.model.js';
 import { calculateDistanceCoordonates } from '../utils/distance.utils.js';
-import { where } from 'sequelize';
 
 @Injectable()
 export class HotelsService {

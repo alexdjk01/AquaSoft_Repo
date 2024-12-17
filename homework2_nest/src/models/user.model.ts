@@ -8,7 +8,7 @@ import { Role } from './role.model.js';
     tableName: 'Users',
     timestamps: false,
 })
-export class Users extends Model{
+export class User extends Model{
 
     @PrimaryKey
     @AutoIncrement
