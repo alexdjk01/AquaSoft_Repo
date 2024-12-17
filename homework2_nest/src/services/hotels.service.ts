@@ -4,6 +4,7 @@ import { Hotel } from '../models/hotel.model.js';
 import { Airport } from '../models/airport.model.js';
 import { Price_Offer } from '../models/price_offer.model.js';
 import { calculateDistanceCoordonates } from '../utils/distance.utils.js';
+import { HotelOffers } from '../models/hoteloffers.model.js';
 
 @Injectable()
 export class HotelsService {
@@ -14,6 +15,8 @@ export class HotelsService {
     private readonly airportModel: typeof Airport,
     @InjectModel(Price_Offer)
     private readonly priceOfferModel: typeof Price_Offer,
+    @InjectModel(HotelOffers)
+    private readonly hotelOfferModel: typeof HotelOffers,
   ) {}
 
   //Method that retrieves all hotels for the database
@@ -235,5 +238,37 @@ export class HotelsService {
     return sortedByScore;
   }
   
+  // ############################## LOGIC FOR HOTEL OFFERS ###################33
+  async findAllOffers(): Promise<HotelOffers[]> {
+    return this.hotelOfferModel.findAll();
+  }
+
+  async findOfferById(id: number): Promise<HotelOffers> {
+    return this.hotelOfferModel.findByPk(id);
+  }
+
+  //create a new offer (issue and store)
+  async issueOffer(hotelOffer: Partial<HotelOffers>): Promise<HotelOffers> {
+    return this.hotelOfferModel.create(hotelOffer);
+  }
+
+  //remove an existing offer (manage)
+  async removeOfferById(id: number): Promise<void> {
+    const hotelOffer = await this.hotelOfferModel.findByPk(id);
+    if (!hotelOffer) {
+      throw new NotFoundException('Hotel offer not found');
+    }
+    await hotelOffer.destroy();
+  }
+
+  //update the data from an existing hotel offer (change) 
+  async updateOfferById(id: number, hotelOfferData: Partial<HotelOffers>): Promise<HotelOffers> {
+    const hotelOffer = await this.hotelOfferModel.findByPk(id);
+    if (!hotelOffer) {
+      throw new NotFoundException('Hotel offer not found');
+    }
+    return hotelOffer.update(hotelOfferData);
+  }
+
 
 }

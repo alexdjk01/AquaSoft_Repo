@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../models/user.model.js';
 import { Permission } from '../models/permission.model.js';
 import { Role } from '../models/role.model.js';
+import { HotelOffers } from '../models/hoteloffers.model.js';
 
 @Injectable()
 export class UsersService {
@@ -52,4 +53,6 @@ export class UsersService {
         }
         await user.destroy();
     }
+
+    
 }

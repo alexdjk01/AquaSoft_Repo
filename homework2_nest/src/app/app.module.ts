@@ -14,6 +14,7 @@ import { User } from '../models/user.model.js';
 import { Role } from '../models/role.model.js';
 import { Permission } from '../models/permission.model.js';
 import { UsersModule } from '../modules/users.module.js';
+import { HotelOffers } from '../models/hoteloffers.model.js';
 
 
 @Module({
@@ -25,7 +26,7 @@ import { UsersModule } from '../modules/users.module.js';
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      models: [Hotel,Hotel_Group, City, Zone, Region, Airport, Price_Offer, User, Role, Permission],
+      models: [Hotel,Hotel_Group, City, Zone, Region, Airport, Price_Offer, User, Role, Permission,HotelOffers],
       autoLoadModels: true,
       synchronize: true,
     }),

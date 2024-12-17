@@ -2,6 +2,7 @@ import {Controller,Get,Post,Put,Delete,Param,Body,UseGuards,} from '@nestjs/comm
 import { HotelsService } from '../services/hotels.service.js';
 import { Hotel } from '../models/hotel.model.js';
 import { JwtAuthGuard } from '../auth/jwtAuthentification.guard.js';
+import { HotelOffers } from '../models/hoteloffers.model.js';
 
 
 @Controller('hotels')
@@ -13,7 +14,7 @@ constructor(private readonly hotelsService: HotelsService) {}
         return this.hotelsService.findAll();
     }
 
-    @Get(':name')
+    @Get('getByName/:name')
     findByName(@Param('name') name: string): Promise<Hotel> {
         return this.hotelsService.findByName(name);
     }
@@ -47,6 +48,31 @@ constructor(private readonly hotelsService: HotelsService) {}
     @Get('bestOffersByScore/:IataCode/:distanceRange')
     async getBestOffersByScore(@Param('IataCode') IataCode:string , @Param('distanceRange') distanceRange:number){
         return this.hotelsService.getBestOffersByScore(IataCode,distanceRange);
+    }
+
+    @Get('findAllOffers')
+    async findAllOffers():Promise<HotelOffers[]>{
+        return this.hotelsService.findAllOffers();
+    }
+
+    @Get('getOfferById/:id')
+    async findOfferById(@Param('id') id:number):Promise<HotelOffers>{
+        return this.hotelsService.findOfferById(id);
+    }
+
+    @Post('addOffer')
+    async addOffer(@Body() hotelOfferData:Partial<HotelOffers>):Promise<HotelOffers>{
+        return this.hotelsService.issueOffer(hotelOfferData);
+    }
+
+    @Put('updateOffer/:id')
+    async updateOffer(@Param('id') id: number, @Body() hotelOfferData: Partial<HotelOffers>,): Promise<HotelOffers> {
+        return this.hotelsService.updateOfferById(id, hotelOfferData);
+    }
+
+    @Delete('deleteOfferById/:id')
+    async deleteOfferById(@Param('id') id:number):Promise<void>{
+        return this.hotelsService.removeOfferById(id);
     }
 
 }

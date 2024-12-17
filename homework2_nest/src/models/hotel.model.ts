@@ -3,6 +3,7 @@ import { Region } from './region.model.js';
 import { City } from './city.model.js';
 import { Hotel_Group } from './hotel_group.model.js';
 import { Price_Offer } from './price_offer.model.js';
+import { HotelOffers } from './hoteloffers.model.js';
   
   @Table({
     tableName: 'Hotels',
@@ -49,5 +50,9 @@ import { Price_Offer } from './price_offer.model.js';
 
     @HasMany( () => Price_Offer)
     Price_Offers:Price_Offer[];
+
+    @HasMany( () => HotelOffers)
+    HotelOffers:Price_Offer[];
+
   }
   

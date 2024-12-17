@@ -11,10 +11,11 @@ import { JWT_SECRET_KEY } from '../constants.js';
 import { Airport } from '../models/airport.model.js';
 import { Price_Offer } from '../models/price_offer.model.js';
 import { Hotel_Group } from '../models/hotel_group.model.js';
+import { HotelOffers } from '../models/hoteloffers.model.js';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Hotel, City, Region, Zone, Airport,Price_Offer,Hotel_Group]),
+    SequelizeModule.forFeature([Hotel, City, Region, Zone, Airport,Price_Offer,Hotel_Group,HotelOffers]),
     JwtModule.register({
       secret: JWT_SECRET_KEY, 
       signOptions: { expiresIn: '1h' },
