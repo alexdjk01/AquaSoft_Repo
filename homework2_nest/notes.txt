@@ -4,3 +4,4 @@ Airports table : Foreign Key : fk_airports_cityID;
 Price_offers table : Foregin Key : fk_price_offers_hotelsID;
 
 //DECIMALS AND FLOATS IN MYSQL ARE IMPORTED INTO TYPESCRIPT AS STRINGS!
+//this is fot testing
