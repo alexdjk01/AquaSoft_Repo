@@ -4,7 +4,7 @@ export default interface UserDashboard {
     Name: string;
     Email:string;
     Password:string;
-    RoleID:string;
+    RoleID:number;
     HotelID:number;
     HotelGroupID:number;
 }

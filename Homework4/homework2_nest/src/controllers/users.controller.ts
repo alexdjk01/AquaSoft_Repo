@@ -4,6 +4,7 @@ import { User } from '../models/user.model.js';
 import { JwtService } from '@nestjs/jwt';
 import { Hotel_Group } from '../models/hotel_group.model.js';
 import { Hotel } from '../models/hotel.model.js';
+import {Link} from '../models/link.model.js';
 
 @Controller('users')
 export class UsersController {
@@ -57,4 +58,17 @@ export class UsersController {
   async deleteUser(@Param('id') id: number): Promise<void> {
     return this.usersService.remove(id);
   }
+
+
+  @Get('/getLink/:id')
+  async getLinksByUserId(@Param('id') id: number):Promise<Link[]>{
+      return this.usersService.getLinksByUserId(id);
+  }
+
+  @Post('/createLinkByUserId')
+  async  createLinkByUserId (@Body('UserID') UserID: number, @Body('LinkURL') LinkURL: string):Promise<Link> {
+    return this.usersService.createLinkByUserId(UserID, LinkURL);
+  }
+
+
 }

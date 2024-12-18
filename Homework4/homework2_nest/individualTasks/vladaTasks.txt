@@ -3,3 +3,6 @@ Models for role and permission
 Created user Module
 Created user controller
 //tb
+Link table + Model + routes (magic links generation and retrieve) 50%
+Buttons on Navbar logic and implementation (for navigation) 50%
+ Partial (50%) SQL table creation / test data values insertion

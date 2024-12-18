@@ -7,6 +7,7 @@ import { HotelOffers } from '../models/hoteloffers.model.js';
 import { JwtService } from '@nestjs/jwt';
 import { Hotel_Group } from '../models/hotel_group.model.js';
 import { Hotel } from '../models/hotel.model.js';
+import { Link } from '../models/link.model.js';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +23,8 @@ export class UsersService {
         private readonly hotelgroupModel: typeof Hotel_Group,
         @InjectModel(Hotel) 
         private readonly hotelModel: typeof Hotel,
+        @InjectModel(Link) 
+        private readonly linkModel: typeof Link,
     ) { }
 
 
@@ -125,5 +128,23 @@ export class UsersService {
         await user.destroy();
     }
 
+
+    // ruta get pe id pt link
+    async getLinksByUserId(userId: number): Promise<Link[]> {
+        const links = await this.linkModel.findAll({
+            where: { UserID: userId }
+        });
+        return links;
+    }
+    
+
+    // rute de post tot pe id pt link, in care dam linkul in parametrii
+    async createLinkByUserId(id: number, linkURL: string): Promise<Link> {
+        const link = await this.linkModel.create({
+            UserID: id,        
+            LinkURL: linkURL   
+        });
+        return link; 
+    }
     
 }
