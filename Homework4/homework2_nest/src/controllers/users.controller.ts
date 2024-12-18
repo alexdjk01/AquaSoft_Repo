@@ -20,7 +20,7 @@ export class UsersController {
 ;
   }
 
-  @Get(':id')
+  @Get('/findById/:id')
   async getUserById(@Param('id') id: number): Promise<User> {
     return this.usersService.findByUserId(id);
   }

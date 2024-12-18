@@ -2,6 +2,7 @@ import React,{ useEffect, useState }  from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserRegistration from '../interfaces/UserRegistration';
 import apiClient from '../apiTransferData/apiClient';
+import '../css/Register.css';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
@@ -49,55 +50,49 @@ export default function RegisterPage() {
     };
 
     return(
-        <div>
-            <h2>Register</h2>
-            <form onSubmit={handleRegister}>
-                <label>
-                    UserName:
-                    <input
-                        type="text"
-                        name="UserName"
-                        value={userRegisterData.UserName}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br />
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="Name"
-                        value={userRegisterData.Name}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br />
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        name="Email"
-                        value={userRegisterData.Email}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="Password"
-                        value={userRegisterData.Password}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br />
-                <button type="submit">Register</button>
-            </form>
-        </div>
+        <div className="register-container">
+      <form className="register-form" onSubmit={handleRegister}>
+        <h2 className="register-title">Register</h2>
+        <label className="register-label">UserName</label>
+        <input
+          type="text"
+          name="UserName"
+          value={userRegisterData.UserName}
+          onChange={handleChange}
+          required
+          className="register-input"
+        />
+        <label className="register-label">Name</label>
+        <input
+          type="text"
+          name="Name"
+          value={userRegisterData.Name}
+          onChange={handleChange}
+          required
+          className="register-input"
+        />
+        <label className="register-label">Email</label>
+        <input
+          type="email"
+          name="Email"
+          value={userRegisterData.Email}
+          onChange={handleChange}
+          required
+          className="register-input"
+        />
+        <label className="register-label">Password</label>
+        <input
+          type="password"
+          name="Password"
+          value={userRegisterData.Password}
+          onChange={handleChange}
+          required
+          className="register-input"
+        />
+        <button type="submit" className="register-button">
+          Register
+        </button>
+      </form>
+    </div>
     );
 }

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../apiTransferData/apiClient';
 import UserLogin from '../interfaces/UserLogin';
 import {jwtDecode} from 'jwt-decode';
+import '../css/Login.css';
+
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -12,20 +14,18 @@ export default function LoginPage() {
         Password: '',
     });
 
-    const [resultMessage, setResultMessage] = useState<string | null>(null); // Response message or null by default
+    const [resultMessage, setResultMessage] = useState<string | null>(null); 
 
-    // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUserLoginData({
             ...userLoginData,
-            [name]: value, // Dynamically update the email or password field
+            [name]: value, 
         });
     };
 
-    // Handle form submission
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Prevent page refresh
+        e.preventDefault(); 
         try {
             console.log(userLoginData);
             const response = await apiClient.post('/users/login', userLoginData); 
@@ -33,18 +33,15 @@ export default function LoginPage() {
                 const access_token  = response.data.access_token;
                 console.log(access_token);
                 if (access_token) {
-                    const decodedToken = jwtDecode(access_token); // Decode the token
-                    console.log('Decoded Token:', decodedToken); // Debugging purposes
+                    const decodedToken = jwtDecode(access_token); 
+                    console.log('Decoded Token:', decodedToken); 
 
-                    // Store token in localStorage
                     localStorage.setItem('token', access_token);
 
-                    // Optionally store decoded user info
                     localStorage.setItem('userInfo', JSON.stringify(decodedToken));
-
                     setResultMessage('Login successful!');
-                    alert(resultMessage); // Show success message
-                    navigate('/dashboard'); // Redirect to dashboard
+                    alert(resultMessage); 
+                    navigate('/dashboard'); 
                 }
             }
         } catch (err: any) {
@@ -53,38 +50,36 @@ export default function LoginPage() {
             } else {
                 setResultMessage('An error occurred during login.');
             }
-            alert(resultMessage); // Show error message
+            alert(resultMessage); 
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        name="Email"
-                        value={userLoginData.Email}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="Password"
-                        value={userLoginData.Password}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <br />
-                <button type="submit">Login</button>
-            </form>
-        </div>
+        <div className="login-container">
+        <form className="login-form" onSubmit={handleLogin}>
+          <h2 className="login-title">Login</h2>
+          <label className="login-label">Email</label>
+          <input
+            type="email"
+            name="Email"
+            value={userLoginData.Email}
+            onChange={handleChange}
+            required
+            className="login-input"
+          />
+          <label className="login-label">Password</label>
+          <input
+            type="password"
+            name="Password"
+            value={userLoginData.Password}
+            onChange={handleChange}
+            required
+            className="login-input"
+          />
+          <button type="submit" className="login-button">
+            Login
+          </button>
+        </form>
+      </div>
     );
 }
