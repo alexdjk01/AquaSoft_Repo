@@ -5,6 +5,8 @@ import { Permission } from '../models/permission.model.js';
 import { Role } from '../models/role.model.js';
 import { HotelOffers } from '../models/hoteloffers.model.js';
 import { JwtService } from '@nestjs/jwt';
+import { Hotel_Group } from '../models/hotel_group.model.js';
+import { Hotel } from '../models/hotel.model.js';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +18,10 @@ export class UsersService {
         private readonly permissionModel: typeof Permission,
         @InjectModel(Role)
         private readonly roleModel: typeof Role,
+        @InjectModel(Hotel_Group) 
+        private readonly hotelgroupModel: typeof Hotel_Group,
+        @InjectModel(Hotel) 
+        private readonly hotelModel: typeof Hotel,
     ) { }
 
 
@@ -32,7 +38,22 @@ export class UsersService {
         }
         return user;
     }
-
+    async findByUserId(id: number): Promise<User> {
+        const user = await this.usersModel.findByPk(id);  //  find by (UserID)
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+        return user;
+      }
+    
+    async getHotelManagersByGroup(groupID: number): Promise<User[]> {
+        console.log(`Fetching managers for groupID: ${groupID}`);
+        const hotelManagers = await this.usersModel.findAll({where: {HotelGroupID: groupID, RoleID:1}});
+        if(hotelManagers.length===0){
+            throw new NotFoundException(`Managers with groupID: ${groupID} not found`);
+        }
+        return hotelManagers;
+    }
     //Method to create a new user instance in the Users database
     async create(userData: Partial<User>): Promise<User> {
         // Check if the email already exists

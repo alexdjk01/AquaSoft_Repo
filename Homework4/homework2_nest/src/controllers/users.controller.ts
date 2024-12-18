@@ -2,6 +2,8 @@ import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common'
 import { UsersService } from '../services/users.service.js';
 import { User } from '../models/user.model.js';
 import { JwtService } from '@nestjs/jwt';
+import { Hotel_Group } from '../models/hotel_group.model.js';
+import { Hotel } from '../models/hotel.model.js';
 
 @Controller('users')
 export class UsersController {
@@ -16,6 +18,16 @@ export class UsersController {
   async getUserByUserName(@Param('username') username: string): Promise<User> {
     return this.usersService.findByUserName(username)
 ;
+  }
+
+  @Get(':id')
+  async getUserById(@Param('id') id: number): Promise<User> {
+    return this.usersService.findByUserId(id);
+  }
+
+  @Get('retrieveManagers/:groupID')
+  async getHotelManagersByGroup(@Param('groupID') groupID: number): Promise<User[]> {
+    return this.usersService.getHotelManagersByGroup(groupID);
   }
 
   @Post('register')

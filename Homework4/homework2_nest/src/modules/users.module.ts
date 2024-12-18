@@ -6,9 +6,11 @@ import { UsersController } from '../controllers/users.controller.js';
 import { Permission } from '../models/permission.model.js';
 import { Role } from '../models/role.model.js';
 import { AuthModule } from '../auth/auth.module.js'; 
+import { Hotel_Group } from '../models/hotel_group.model.js';
+import { Hotel } from '../models/hotel.model.js';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User, Permission, Role]),
+  imports: [SequelizeModule.forFeature([User, Permission, Role,Hotel_Group, Hotel]),
   AuthModule,], 
   controllers: [UsersController], 
   providers: [UsersService], 
