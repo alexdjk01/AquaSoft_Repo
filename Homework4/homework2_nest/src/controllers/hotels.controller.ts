@@ -20,7 +20,7 @@ constructor(private readonly hotelsService: HotelsService) {}
     }
 
     @Post()
-    @UseGuards(JwtAuthGuard) //private route
+    //@UseGuards(JwtAuthGuard) //private route
     create(@Body() hotelData: Partial<Hotel>): Promise<Hotel> {
         return this.hotelsService.create(hotelData);
     }

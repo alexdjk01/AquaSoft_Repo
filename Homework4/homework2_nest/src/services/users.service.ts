@@ -4,10 +4,12 @@ import { User } from '../models/user.model.js';
 import { Permission } from '../models/permission.model.js';
 import { Role } from '../models/role.model.js';
 import { HotelOffers } from '../models/hoteloffers.model.js';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
     constructor(
+        private readonly jwtService: JwtService,
         @InjectModel(User)
         private readonly usersModel: typeof User,
         @InjectModel(Permission)
@@ -58,7 +60,7 @@ export class UsersService {
         return newUser;
     }
     // Method to handle user login with email and password
-    async login(email: string, password: string): Promise<string> {
+    async login(email: string, password: string): Promise<{ access_token: string }> {
         const user = await this.usersModel.findOne({ where: { Email: email } });
         if (!user) {
             throw new NotFoundException('User not found');
@@ -70,7 +72,17 @@ export class UsersService {
         }
         console.log('Login successful');
         console.log(user);
-        return 'Login successful'; // Return a success message
+
+       // Generate a JWT token
+        const payload = {
+        email: user.getDataValue('Email'),
+        role: user.getDataValue('RoleID'), // Include any other user details as needed
+        userId: user.getDataValue('UserID'),
+        };
+        const accessToken = this.jwtService.sign(payload);
+        console.log(accessToken);
+        console.log('Login successful');
+        return { access_token: accessToken }; // Return the token in the response
         
     }
 

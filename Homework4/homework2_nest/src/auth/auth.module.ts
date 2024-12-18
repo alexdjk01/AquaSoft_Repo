@@ -8,7 +8,7 @@ import { JWT_SECRET_KEY } from '../constants.js';
   imports: [
     JwtModule.register({
       secret: JWT_SECRET_KEY, 
-      signOptions: { expiresIn: 600 }, //600 seconds or 10 minutes.
+      signOptions: { expiresIn: 3600 }, //3600 seconds or 1h .
     }),
   ],
   controllers: [AuthController],

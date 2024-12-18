@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { UsersService } from '../services/users.service.js';
 import { User } from '../models/user.model.js';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +32,7 @@ export class UsersController {
   async login(
     @Body('Email') Email: string,  
     @Body('Password') Password: string  
-  ): Promise<string> {
+  ): Promise<{ access_token: string } > {
     return this.usersService.login(Email, Password);
   }
 
