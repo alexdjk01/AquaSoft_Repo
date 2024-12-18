@@ -17,9 +17,22 @@ export class UsersController {
 ;
   }
 
-  @Post()
-  async createUser(@Body() userData: Partial<User>): Promise<User> {
-    return this.usersService.create(userData);
+  @Post('register')
+  async createUser(
+    @Body('UserName') UserName: string,  
+    @Body('Name') Name: string,  
+    @Body('Email') Email: string,  
+    @Body('Password') Password: string  
+  ): Promise<User> {
+    return this.usersService.create({ UserName, Name, Email, Password });
+  }
+
+  @Post('login')
+  async login(
+    @Body('Email') Email: string,  
+    @Body('Password') Password: string  
+  ): Promise<string> {
+    return this.usersService.login(Email, Password);
   }
 
   @Put(':id')
