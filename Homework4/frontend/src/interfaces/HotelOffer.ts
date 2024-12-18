@@ -1,4 +1,4 @@
-interface HotelOffer {
+export default interface HotelOffer {
     OfferName: string;
     Description: string;
     PriceEconomy: string;
@@ -9,5 +9,3 @@ interface HotelOffer {
     StartDate: string;
     EndDate: string;
   }
-
-  export default HotelOffer;

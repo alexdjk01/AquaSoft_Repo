@@ -68,8 +68,10 @@ export class UsersService {
         if (passwordUser !== password) {
             throw new NotFoundException('Invalid credentials');
         }
-
+        console.log('Login successful');
+        console.log(user);
         return 'Login successful'; // Return a success message
+        
     }
 
     //Method to update the fields of a specific user in the database

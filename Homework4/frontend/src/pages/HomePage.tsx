@@ -2,7 +2,7 @@ import React, { useEffect, useState }  from 'react';
 import apiClient from '../apiTransferData/apiClient';
 import HotelOffer from '../interfaces/HotelOffer';
 
-function HomePage() {
+export default function HomePage() {
 
     const [offers, setOffers] = useState<HotelOffer[]>([]);
 
@@ -31,5 +31,3 @@ function HomePage() {
         </div>
       );
 };
-
-export default HomePage;
