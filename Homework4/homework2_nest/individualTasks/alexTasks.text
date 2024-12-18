@@ -8,4 +8,4 @@ Tasks Done :
         Backend logic in hotel.controller.ts: route to: retrieve all/one hotelOffers, create, update, delete [@Get('findAllOffers'), Get('getOfferById/:id'), @Post('addOffer'), @Put('updateOffer/:id'), @Delete('deleteOfferById:/id')]
 
         //TO-DO : Using JWT we can include the roleName into the payload in order to be able to see which kind of user is logged in / let just hotelManager to work with offers for its hotel.
-        ///
+        ///NOTHING
