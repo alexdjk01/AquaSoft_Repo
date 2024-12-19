@@ -1,3 +1,34 @@
+
+.body{
+    background: linear-gradient(135deg, #eceff1, #b0bec5);
+    height: 100vh;
+}
+
+
+.headerDashboard{
+    display: flex;
+    background-color: #5656d3; 
+    height: 300px;
+}
+
+.titleDashboard{
+    margin-top: 100px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.subtitleDashboard{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-size: 20px;
+}
+
+
+
+
+
 .available-links{
     margin-bottom: 20px;
     display: flex;
@@ -10,3 +41,4 @@
     font-weight: bold;
 
 }
+

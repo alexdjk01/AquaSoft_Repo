@@ -105,15 +105,16 @@ const Navbar: React.FC = () => {
               Logout
             </button>
           </>
-        ):location.pathname === '/administratorPage' ? (
+        ) : location.pathname === '/administrationPage' ? (
           <>   
              <button
               className="btn btn-outline-danger"
               onClick={handlerLogoutClick}
             >
               Logout
-            </button>
-          </>):null}
+            </button> 
+          </>
+        ) : null}
       </div>
     </div>
   </nav>

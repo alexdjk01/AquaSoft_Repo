@@ -9,10 +9,8 @@ import '../css/ManageHotelManagers.css';
 
 export default function ManageHotelManagers() {
 
-    const [users, setUsers] = useState<UserDashboard[]>([]);
     const [loggedUser, setLoggedUser] = useState<UserDashboard | null>(null);
     const [hotelManagers, setHotelManagers] = useState<UserDashboard[]>([]);
-    const [showTable, setShowTable] = useState<boolean>(false);
     const [showManagers, setShowManagers] = useState<boolean>(false);
     const [linkURL, setLinkURL] = useState<string>('');
     const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
@@ -66,19 +64,7 @@ export default function ManageHotelManagers() {
         fetchPermission();
       },[loggedUser?.RoleID])
 
-    // get all the users of the platform
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await apiClient.get('/users');
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error fetching all users:', error);
-            }
-        };
-
-        fetchUsers();
-    }, []);
+    
 
     // get all the hotel managers with the same if as the hotel group manager
     useEffect(() => {
@@ -118,10 +104,6 @@ export default function ManageHotelManagers() {
         setLinkURL(event.target.value);
     };
 
-    const toggleTable = () => {
-        setShowTable((prev) => !prev);
-    };
-
     const toggleManagers = () => {
         setShowManagers((prev) => !prev);
     };
@@ -141,13 +123,12 @@ export default function ManageHotelManagers() {
 
       return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>User Dashboard</h1>
+            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Hotel Group Manager Panel</h1>
 
              {/* get infos about the current logged user */}
              {loggedUser && (
                 <div className="logged-user-info" style={{ marginTop: '20px' }}>
-                    <h3>Logged-in User Information:</h3>
-                    <p><strong>Name:</strong> {loggedUser.Name}</p>
+                    <h3>Hello back, {loggedUser.Name} </h3>
                     <p><strong>Email:</strong> {loggedUser.Email}</p>
                     <p><strong>HotelGroupID:</strong> {loggedUser.HotelGroupID}</p>
                 </div>
@@ -166,45 +147,6 @@ export default function ManageHotelManagers() {
                 />
             </div>
 
-
-            {/* button for displaying/hide user table */}
-            <button onClick={toggleTable} className="dashboard-button">
-                {showTable ? 'Hide User Table' : 'Show User Table'}
-            </button>
-
-            {/* the user table */}
-            {showTable && (
-                <div className="table-container">
-                    <table className="user-table">
-                        <thead>
-                            <tr>
-                                <th>UserID</th>
-                                <th>UserName</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>RoleID</th>
-                                <th>HotelID</th>
-                                <th>HotelGroupID</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user) => (
-                                <tr key={user.UserID}>
-                                    <td>{user.UserID}</td>
-                                    <td>{user.UserName}</td>
-                                    <td>{user.Name}</td>
-                                    <td>{user.Email}</td>
-                                    <td>{user.RoleID}</td>
-                                    <td>{user.HotelID || 'N/A'}</td>
-                                    <td>{user.HotelGroupID || 'N/A'}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-
-           
 
             {/* button for displaying/hide hotel managers with same group */}
             <button onClick={toggleManagers} className="dashboard-button" style={{ marginTop: '20px' }}>

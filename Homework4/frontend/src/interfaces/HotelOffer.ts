@@ -1,5 +1,6 @@
 export default interface HotelOffer {
     OfferID:number;
+    HotelID:number;
     OfferName: string;
     Description: string;
     PriceEconomy: string;

@@ -98,7 +98,7 @@ export default function AdministrationPage() {
     
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-        <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>User Dashboard</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Administration</h1>
 
          {/* get infos about the current logged user */}
          {loggedUser && (

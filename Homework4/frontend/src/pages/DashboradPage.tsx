@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../apiTransferData/apiClient';
 import UserDashboard from '../interfaces/UserDashboard';
+import HotelOffer from '../interfaces/HotelOffer';
 import { jwtDecode } from 'jwt-decode';
 import '../css/Dashboard.css'; 
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 export default function DashboardPage() {
     const [loggedUser, setLoggedUser] = useState<UserDashboard | null>(null);
     const [availableLinks, setAvailableLinks] = useState<string[]>([]); 
+    const [offers, setOffers] = useState<HotelOffer[]>([]);
+    const [hotelMap, setHotelMap] = useState<{ [key: number]: string }>({});
 
     const navigate = useNavigate();
 
@@ -38,12 +41,51 @@ export default function DashboardPage() {
         }
     }, []);
 
-  
+    useEffect(() => {
+        const fetchOffers = async () => {
+          try {
+            const response = await apiClient.get('/hotels/findAllOffers');
+            setOffers(response.data);
+          } catch (error) {
+            console.error('Error fetching hotel offers:', error);
+          }
+        };
+    
+        fetchOffers();
+      }, []);
+
+    //mapper to get also the name of the hotel
+    useEffect(() => {
+        const fetchHotels = async () => {
+          try {
+            const response = await apiClient.get('/hotels'); // Endpoint to get all hotels
+            const hotels = response.data;
+            const mapping = hotels.reduce((map: { [key: number]: string }, hotel: any) => {
+              map[hotel.HotelID] = hotel.HotelName;
+              return map;
+            }, {});
+            setHotelMap(mapping);
+          } catch (error) {
+            console.error('Error fetching hotels:', error);
+          }
+    };
+      
+        fetchHotels();
+      }, []);
+
+    const formatDateToMySQL = (dateString: string): string => {
+        const date = new Date(dateString);
+
+        const day = String(date.getDate()).padStart(2, '0'); 
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const year = date.getFullYear(); 
+        return `${day}-${month}-${year}`; 
+    };
 
 
     return (
 
-        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+        <div className='container-fluid'>
 
             {loggedUser && loggedUser.RoleID === 1 && (
                 <div className="available-links">
@@ -60,20 +102,54 @@ export default function DashboardPage() {
                 </div>
             )}
 
-            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>User Dashboard</h1>
+            <div className='headerDashboard'>
+                {/* get infos about the current logged user */}
+                {loggedUser && (
+                    <div className="container text-centered" >
+                        <p className='titleDashboard'>Hello back, {loggedUser.Name} ! </p>
+                        <p className='subtitleDashboard'>Find exclusive journey offers in every corner of the world!</p>
+                    </div>
+                )}
+
+            </div>
 
             
-
-
-             {/* get infos about the current logged user */}
-             {loggedUser && (
-                <div className="logged-user-info" style={{ marginTop: '20px' }}>
-                    <h3>Logged-in User Information:</h3>
-                    <p><strong>Name:</strong> {loggedUser.Name}</p>
-                    <p><strong>Email:</strong> {loggedUser.Email}</p>
-                    <p><strong>HotelGroupID:</strong> {loggedUser.HotelGroupID}</p>
-                </div>
-            )}
+              {/* Hotel Offers */}
+              <div>
+                <h1 className='mt-5 mb-5'>Discover our offers</h1>
+                <table className="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Offer Name</th>
+                            <th>Hotel Name</th>
+                            <th>Description</th>
+                            <th>Economy</th>
+                            <th>Standard</th>
+                            <th>Suite</th>
+                            <th>Delux</th>
+                            <th>StartDate</th>
+                            <th>EndDate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {offers.map((offer, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{offer.OfferName}</td>
+                                <td>{hotelMap[offer.HotelID] || 'Unknown Hotel'}</td>
+                                <td>{offer.Description}</td>
+                                <td>{offer.PriceEconomy}</td>
+                                <td>{offer.PriceStandard}</td>
+                                <td>{offer.PriceSuite}</td>
+                                <td>{offer.PriceLuxury}</td>
+                                <td>{formatDateToMySQL(offer.StartDate)}</td>
+                                <td>{formatDateToMySQL(offer.EndDate)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

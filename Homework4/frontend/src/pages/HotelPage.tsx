@@ -60,7 +60,7 @@ export default function HotelPage() {
       }
     };
     fetchPermission();
-  })
+  }, [loggedUser?.RoleID])
 
   useEffect(() => {
     if (loggedUser?.HotelID && isAuthorized ) {
