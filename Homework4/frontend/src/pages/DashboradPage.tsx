@@ -6,11 +6,9 @@ import '../css/Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
-    const [users, setUsers] = useState<UserDashboard[]>([]);
     const [loggedUser, setLoggedUser] = useState<UserDashboard | null>(null);
-    const [hotelManagers, setHotelManagers] = useState<UserDashboard[]>([]);
-    const [showTable, setShowTable] = useState<boolean>(false);
-    const [showManagers, setShowManagers] = useState<boolean>(false);
+    const [availableLinks, setAvailableLinks] = useState<string[]>([]); 
+
     const navigate = useNavigate();
 
     // decode the token and get the current userId
@@ -26,6 +24,11 @@ export default function DashboardPage() {
                     const response = await apiClient.get(`/users/findById/${userId}`);
                     console.log(response);
                     setLoggedUser(response.data);
+                    if (response.data.RoleID === 1) {
+                        const linksResponse = await apiClient.get(`/users/getLink/${userId}`);
+                        console.log(linksResponse);
+                        setAvailableLinks(linksResponse.data.map((link: { LinkURL: string }) => link.LinkURL));
+                    }
                 } catch (error) {
                     console.error('Error fetching logged-in user:', error);
                 }
@@ -41,7 +44,26 @@ export default function DashboardPage() {
     return (
 
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+
+            {loggedUser && loggedUser.RoleID === 1 && (
+                <div className="available-links" style={{ marginBottom: '20px',height:'80px', padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '5px' }}>
+                    <p>Available Links for Hotel Manager:</p>
+                    <ul>
+                        {availableLinks.length > 0 ? (
+                            availableLinks.map((link, index) => (
+                                <li key={index}><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></li>
+                            ))
+                        ) : (
+                            <p>No links available at the moment.</p>
+                        )}
+                    </ul>
+                </div>
+            )}
+
             <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>User Dashboard</h1>
+
+            
+
 
              {/* get infos about the current logged user */}
              {loggedUser && (

@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboradPage';
 import Navbar from './components/Navbar';
 import ManageHotelManagers from './pages/ManageHotelManagers';
+import HotelPage from './pages/HotelPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/manageHotelManagers" element={<ManageHotelManagers />} />
+                    <Route path="/hotelpage" element={<HotelPage />} />
                 </Routes>
             </div>
         </Router>
