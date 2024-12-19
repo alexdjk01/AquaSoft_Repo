@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Hotel_Group } from '../models/hotel_group.model.js';
 import { Hotel } from '../models/hotel.model.js';
 import {Link} from '../models/link.model.js';
+import { Permission } from '../models/permission.model.js';
 
 @Controller('users')
 export class UsersController {
@@ -70,6 +71,10 @@ export class UsersController {
     return this.usersService.createLinkByUserId(UserID, LinkURL);
   }
 
+  @Get('/getPermissionByRoleId/:id')
+  async getPermissionByRoleId(@Param('id') id:number):Promise<Permission>{
+    return this.usersService.getPermissionByRoleId(id);
+  }
 
   
 }

@@ -40,7 +40,6 @@ export default function LoginPage() {
 
                     localStorage.setItem('userInfo', JSON.stringify(decodedToken));
                     setResultMessage('Login successful!');
-                    alert(resultMessage); 
                     navigate('/dashboard'); 
                 }
             }

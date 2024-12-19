@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '../apiTransferData/apiClient';
 import UserDashboard from '../interfaces/UserDashboard';
 import HotelOffers from '../interfaces/HotelOffer';
+import Permission from '../interfaces/Permission';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import '../css/HotelPage.css';
@@ -10,6 +11,7 @@ export default function HotelPage() {
   const [loggedUser, setLoggedUser] = useState<UserDashboard | null>(null);
   const [hotelOffers, setHotelOffers] = useState<HotelOffers[]>([]);
   const [editedOffers, setEditedOffers] = useState<HotelOffers[]>([]); // to store the edited offers
+  const [permission,setPermission] = useState<Permission | null>(null);
   const navigate = useNavigate();
 
   // decode the token and see infos about the current user that is logged into the page
@@ -33,6 +35,20 @@ export default function HotelPage() {
       fetchLoggedUser();
     }
   }, []);
+
+  //check if the user has the rights to access this page
+  useEffect( () => {
+    const roleID = loggedUser?.RoleID;
+    const fetchPermission = async () => {
+      try {
+        const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
+        setPermission(response.data) ;
+      } catch (error) {
+        console.error('Error fetching logged-in user:', error);
+      }
+    };
+    fetchPermission();
+  })
 
   useEffect(() => {
     if (loggedUser?.HotelID) {

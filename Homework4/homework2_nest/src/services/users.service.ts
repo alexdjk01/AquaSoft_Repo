@@ -146,5 +146,12 @@ export class UsersService {
         });
         return link; 
     }
+
+    async getPermissionByRoleId(roleId:number):Promise<Permission>{
+        const permission = await this.permissionModel.findOne({
+            where: {RoleID: roleId}
+        });
+        return permission;
+    }
     
 }
