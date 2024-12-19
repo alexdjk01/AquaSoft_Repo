@@ -21,3 +21,6 @@ Tasks Done :
                 Hotel managers can now interact with the offers from their hotel (CRUD operations)
                 new service and controller route for retrieving, delete, update, create offers 
                 
+        Permissions:
+        Backend route for get permissions by roleID
+        HotelPage that allows to view the data only users with a specific role and permission status.

@@ -12,6 +12,7 @@ export default function HotelPage() {
   const [hotelOffers, setHotelOffers] = useState<HotelOffers[]>([]);
   const [editedOffers, setEditedOffers] = useState<HotelOffers[]>([]); // to store the edited offers
   const [permission,setPermission] = useState<Permission | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // decode the token and see infos about the current user that is logged into the page
@@ -38,11 +39,22 @@ export default function HotelPage() {
 
   //check if the user has the rights to access this page
   useEffect( () => {
-    const roleID = loggedUser?.RoleID;
+    const roleID:number|undefined = loggedUser?.RoleID;
     const fetchPermission = async () => {
       try {
         const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
         setPermission(response.data) ;
+
+        // Check authorization
+        const isManager:boolean = roleID === 2 ||roleID === 1; //Group manager  |  Hotel Manager
+        const hasReadPermission = response.data?.ReadPermission;
+
+        if (isManager && hasReadPermission) {
+          setIsAuthorized(true); // Allow access
+        } else {
+          setIsAuthorized(false); // Deny access
+        }
+
       } catch (error) {
         console.error('Error fetching logged-in user:', error);
       }
@@ -51,7 +63,7 @@ export default function HotelPage() {
   })
 
   useEffect(() => {
-    if (loggedUser?.HotelID) {
+    if (loggedUser?.HotelID && isAuthorized ) {
       const fetchOffersHotel = async () => {
         try {
           const response = await apiClient.get(`/hotels/getOffersHotelById/${loggedUser.HotelID}`);
@@ -68,7 +80,7 @@ export default function HotelPage() {
 
       fetchOffersHotel();
     }
-  }, [loggedUser]);
+  }, [loggedUser, isAuthorized]);
 
   // method that keeps track of the edits in the table and the original array of offers
   const handleInputChange = (id: number, field: string, value: string) => {
@@ -132,9 +144,22 @@ export default function HotelPage() {
     }
   };
 
+  // render this if the authorisation fails
+  if (!isAuthorized) {
+    return (
+      <div className="unauthorized-container">
+        <h1>You are not allowed to visit this page.</h1>
+        <button onClick={() => navigate('/dashboard')} className="go-back-button">
+          Turn Back
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="hotel-page-container">
       <h1 className="hotel-page-title">Hotel Offers</h1>
+
 
       <div className="table-container">
         <table className="hotel-table">
