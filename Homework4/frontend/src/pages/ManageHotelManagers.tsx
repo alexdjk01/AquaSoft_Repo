@@ -4,6 +4,7 @@ import UserDashboard from '../interfaces/UserDashboard';
 import { jwtDecode } from 'jwt-decode';
 import '../css/Dashboard.css'; 
 import { useNavigate } from 'react-router-dom';
+import '../css/ManageHotelManagers.css';
 
 export default function ManageHotelManagers() {
 
@@ -12,6 +13,7 @@ export default function ManageHotelManagers() {
     const [hotelManagers, setHotelManagers] = useState<UserDashboard[]>([]);
     const [showTable, setShowTable] = useState<boolean>(false);
     const [showManagers, setShowManagers] = useState<boolean>(false);
+    const [linkURL, setLinkURL] = useState<string>('');
     const navigate = useNavigate();
 
     // decode the token and get the current userId
@@ -68,6 +70,26 @@ export default function ManageHotelManagers() {
         }
     }, [loggedUser]);
 
+    const handleSendLink = async (managerId: number) => {
+        try {
+            console.log(linkURL, managerId);
+            // Send the link to the backend to save it in the database
+            await apiClient.post('/users/createLinkByUserId', {
+                UserID: managerId,
+                LinkURL: linkURL,
+                
+            });
+
+            console.log(`Link sent to manager ${managerId}: ${linkURL}`);
+        } catch (error) {
+            console.error('Error sending link to manager:', error);
+        }
+    };
+
+    const handleLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLinkURL(event.target.value);
+    };
+
     const toggleTable = () => {
         setShowTable((prev) => !prev);
     };
@@ -90,6 +112,20 @@ export default function ManageHotelManagers() {
                     <p><strong>HotelGroupID:</strong> {loggedUser.HotelGroupID}</p>
                 </div>
             )}
+
+            {/* Add input for link */}
+            <div className="input-container" style={{ marginBottom: '20px' }}>
+                <label htmlFor="link-input" style={{ marginRight: '10px' }}>Enter Link:</label>
+                <input
+                    id="link-input"
+                    type="text"
+                    value={linkURL}
+                    onChange={handleLinkChange}  // Handle changes to the link input
+                    placeholder="Enter a link"
+                    style={{ padding: '10px', width: '300px' }}
+                />
+            </div>
+
 
             {/* button for displaying/hide user table */}
             <button onClick={toggleTable} className="dashboard-button">
@@ -146,6 +182,7 @@ export default function ManageHotelManagers() {
                                 <th>UserName</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Action</th> {/* Button to send link */}
                             </tr>
                         </thead>
                         <tbody>
@@ -155,6 +192,13 @@ export default function ManageHotelManagers() {
                                     <td>{manager.UserName}</td>
                                     <td>{manager.Name}</td>
                                     <td>{manager.Email}</td>
+                                    <td>
+                                        <button 
+                                            onClick={() => handleSendLink(manager.UserID)}
+                                            className="send-link-button" 
+                                            style={{ padding: '5px 10px' }}
+                                        >Send Link</button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
