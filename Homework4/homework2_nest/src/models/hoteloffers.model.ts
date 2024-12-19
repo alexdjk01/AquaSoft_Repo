@@ -39,9 +39,9 @@ export class HotelOffers extends Model{
     PriceLuxury:string;
 
     @Column
-    StartDate: string;
+    StartDate: Date;
 
     @Column 
-    EndDate : string;
+    EndDate : Date;
 
 }

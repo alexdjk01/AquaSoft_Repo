@@ -46,7 +46,7 @@ export default function DashboardPage() {
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
 
             {loggedUser && loggedUser.RoleID === 1 && (
-                <div className="available-links" style={{ marginBottom: '20px',height:'80px', padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '5px' }}>
+                <div className="available-links">
                     <p>Available Links for Hotel Manager:</p>
                     <ul>
                         {availableLinks.length > 0 ? (

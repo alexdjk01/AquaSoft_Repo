@@ -247,6 +247,13 @@ export class HotelsService {
     return this.hotelOfferModel.findByPk(id);
   }
 
+  async findOffersHotelById(id: number): Promise<HotelOffers[]> {
+    return this.hotelOfferModel.findAll({
+        where: { HotelID: id }
+    });
+  }
+
+
   //create a new offer (issue and store)
   async issueOffer(hotelOffer: Partial<HotelOffers>): Promise<HotelOffers> {
     return this.hotelOfferModel.create(hotelOffer);

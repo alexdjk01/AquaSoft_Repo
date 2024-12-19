@@ -60,6 +60,11 @@ constructor(private readonly hotelsService: HotelsService) {}
         return this.hotelsService.findOfferById(id);
     }
 
+    @Get('getOffersHotelById/:id')
+    async findOffersHotelById(@Param('id') id:number):Promise<HotelOffers[]>{
+        return this.hotelsService.findOffersHotelById(id);
+    }
+
     @Post('addOffer')
     async addOffer(@Body() hotelOfferData:Partial<HotelOffers>):Promise<HotelOffers>{
         return this.hotelsService.issueOffer(hotelOfferData);

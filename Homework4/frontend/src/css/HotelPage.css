@@ -1,0 +1,71 @@
+/* Styling for the Hotel Page */
+
+.hotel-page-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .hotel-page-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  .table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+  
+  .hotel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+  }
+  
+  .hotel-table th,
+  .hotel-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .hotel-table th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .hotel-table td input {
+    width: 100%;
+    padding: 5px;
+    font-size: 12px;
+  }
+  
+  .hotel-table td button {
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .hotel-table td button:hover {
+    background-color: #c82333;
+  }
+  
+  .save-button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .save-button:hover {
+    background-color: #218838;
+  }
+  
