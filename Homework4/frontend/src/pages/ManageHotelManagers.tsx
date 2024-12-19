@@ -2,6 +2,7 @@ import React, { useEffect, useState }  from 'react';
 import apiClient from '../apiTransferData/apiClient';
 import UserDashboard from '../interfaces/UserDashboard';
 import { jwtDecode } from 'jwt-decode';
+import Permission from '../interfaces/Permission';
 import '../css/Dashboard.css'; 
 import { useNavigate } from 'react-router-dom';
 import '../css/ManageHotelManagers.css';
@@ -14,6 +15,8 @@ export default function ManageHotelManagers() {
     const [showTable, setShowTable] = useState<boolean>(false);
     const [showManagers, setShowManagers] = useState<boolean>(false);
     const [linkURL, setLinkURL] = useState<string>('');
+    const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+    const [permission,setPermission] = useState<Permission | null>(null);
     const navigate = useNavigate();
 
     // decode the token and get the current userId
@@ -37,6 +40,31 @@ export default function ManageHotelManagers() {
             fetchLoggedUser();
         }
     }, []);
+
+    //Check permission
+    useEffect( () => {
+        const roleID:number|undefined = loggedUser?.RoleID;
+        const fetchPermission = async () => {
+          try {
+            const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
+            setPermission(response.data) ;
+    
+            // Check authorization
+            const isManager:boolean = roleID === 2 || roleID === 1; //Group manager  |  Hotel Manager
+            const hasReadPermission = response.data?.ReadPermission;
+    
+            if (isManager && hasReadPermission) {
+              setIsAuthorized(true); // Allow access
+            } else {
+              setIsAuthorized(false); // Deny access
+            }
+    
+          } catch (error) {
+            console.error('Error fetching logged-in user:', error);
+          }
+        };
+        fetchPermission();
+      },[loggedUser?.RoleID])
 
     // get all the users of the platform
     useEffect(() => {
@@ -97,6 +125,18 @@ export default function ManageHotelManagers() {
     const toggleManagers = () => {
         setShowManagers((prev) => !prev);
     };
+
+    if (!isAuthorized) {
+        return (
+          <div className="unauthorized-container">
+            <h1>You are not allowed to visit this page.</h1>
+            <button onClick={() => navigate('/dashboard')} className="go-back-button">
+              Turn Back
+            </button>
+          </div>
+        );
+      }
+    
 
 
       return (
