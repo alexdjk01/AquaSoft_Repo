@@ -12,6 +12,7 @@ export default function HotelPage() {
   const [hotelOffers, setHotelOffers] = useState<HotelOffers[]>([]);
   const [editedOffers, setEditedOffers] = useState<HotelOffers[]>([]); // to store the edited offers
   const [permission,setPermission] = useState<Permission | null>(null);
+  const [newOffer, setNewOffer] = useState<HotelOffers | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -81,6 +82,33 @@ export default function HotelPage() {
       fetchOffersHotel();
     }
   }, [loggedUser, isAuthorized]);
+
+  const handleNewOfferChange = (field: string, value: string) => {
+    setNewOffer((prev) => ({
+      ...prev,
+      [field]: value,
+      HotelID: loggedUser?.HotelID || 0, // Ensure the HotelID is attached
+    } as HotelOffers));
+  };
+
+  // Handle form submission to add a new offer
+  const handleAddOffer = async () => {
+    try {
+      if (newOffer) {
+        const response = await apiClient.post('/hotels/addOffer', {
+          ...newOffer,
+          StartDate: `${newOffer.StartDate} 00:00:00`, // Format for MySQL
+          EndDate: `${newOffer.EndDate} 00:00:00`, // Format for MySQL
+        });
+        setHotelOffers((prev) => [...prev, response.data]); // Add new offer to the table
+        setNewOffer(null); // Reset the new offer form
+        alert('New offer added successfully!');
+      }
+    } catch (error) {
+      console.error('Error adding new offer:', error);
+      alert('Failed to add new offer.');
+    }
+  };
 
   // method that keeps track of the edits in the table and the original array of offers
   const handleInputChange = (id: number, field: string, value: string) => {
@@ -160,8 +188,71 @@ export default function HotelPage() {
     <div className="hotel-page-container">
       <h1 className="hotel-page-title">Hotel Offers</h1>
 
+      {/* Add New Offer Form */}
+      <div className="new-offer-form">
+        <h4>Add new offer</h4>
+        <div>
+          <input
+            type="text"
+            placeholder="Offer Name"
+            value={newOffer?.OfferName || ''}
+            onChange={(e) => handleNewOfferChange('OfferName', e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Description"
+            value={newOffer?.Description || ''}
+            onChange={(e) => handleNewOfferChange('Description', e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Economy Price"
+            value={newOffer?.PriceEconomy || ''}
+            onChange={(e) => handleNewOfferChange('PriceEconomy', e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Standard Price"
+            value={newOffer?.PriceStandard || ''}
+            onChange={(e) => handleNewOfferChange('PriceStandard', e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Deluxe Price"
+            value={newOffer?.PriceDeluxe || ''}
+            onChange={(e) => handleNewOfferChange('PriceDeluxe', e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Suite Price"
+            value={newOffer?.PriceSuite || ''}
+            onChange={(e) => handleNewOfferChange('PriceSuite', e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Luxury Price"
+            value={newOffer?.PriceLuxury || ''}
+            onChange={(e) => handleNewOfferChange('PriceLuxury', e.target.value)}
+          />
+          <input
+            type="date"
+            placeholder="Start Date"
+            value={newOffer?.StartDate || ''}
+            onChange={(e) => handleNewOfferChange('StartDate', e.target.value)}
+          />
+          <input
+            type="date"
+            placeholder="End Date"
+            value={newOffer?.EndDate || ''}
+            onChange={(e) => handleNewOfferChange('EndDate', e.target.value)}
+          />
+          <button className='save-button' onClick={handleAddOffer}>Add Offer</button>
+        </div>
+      </div>
 
+      
       <div className="table-container">
+      <h4>Edit or Delete existing offers</h4>
         <table className="hotel-table">
           <thead>
             <tr>
