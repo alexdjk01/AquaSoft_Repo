@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboradPage';
 import Navbar from './components/Navbar';
 import ManageHotelManagers from './pages/ManageHotelManagers';
 import HotelPage from './pages/HotelPage';
+import AdministrationPage from './pages/AdministrationPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/manageHotelManagers" element={<ManageHotelManagers />} />
                     <Route path="/hotelpage" element={<HotelPage />} />
+                    <Route path="/administrationPage" element={<AdministrationPage />} />
                 </Routes>
             </div>
         </Router>

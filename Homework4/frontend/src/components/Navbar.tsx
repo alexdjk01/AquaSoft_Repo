@@ -40,6 +40,10 @@ const Navbar: React.FC = () => {
     navigate('/manageHotelManagers'); // Navigate to the manage page
   };
 
+  const handlerAdminClick = () => {
+    navigate('/administrationPage'); // Navigate to the admin page
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container-fluid">
@@ -77,6 +81,14 @@ const Navbar: React.FC = () => {
                 Manage
               </button>
             )}
+            {userRole === 4 && ( // Only for Hotel admin
+              <button
+                className="btn btn-outline-warning me-2"
+                onClick={handlerAdminClick}
+              >
+                Admin
+              </button>
+            )}
             <button
               className="btn btn-outline-danger"
               onClick={handlerLogoutClick}
@@ -93,7 +105,15 @@ const Navbar: React.FC = () => {
               Logout
             </button>
           </>
-        ):null}
+        ):location.pathname === '/administratorPage' ? (
+          <>   
+             <button
+              className="btn btn-outline-danger"
+              onClick={handlerLogoutClick}
+            >
+              Logout
+            </button>
+          </>):null}
       </div>
     </div>
   </nav>
