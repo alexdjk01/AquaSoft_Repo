@@ -35,9 +35,7 @@ export default function LoginPage() {
                 if (access_token) {
                     const decodedToken = jwtDecode(access_token); 
                     console.log('Decoded Token:', decodedToken); 
-
                     localStorage.setItem('token', access_token);
-
                     localStorage.setItem('userInfo', JSON.stringify(decodedToken));
                     setResultMessage('Login successful!');
                     navigate('/dashboard'); 

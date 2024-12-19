@@ -14,6 +14,8 @@ export default function HotelPage() {
   const [permission,setPermission] = useState<Permission | null>(null);
   const [newOffer, setNewOffer] = useState<HotelOffers | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [isAuthorizedOp, setIsAuthorizedOp] = useState<boolean>(false);
+  const [permissionsLoaded, setPermissionsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // decode the token and see infos about the current user that is logged into the page
@@ -41,45 +43,64 @@ export default function HotelPage() {
   //check if the user has the rights to access this page
   useEffect( () => {
     const roleID:number|undefined = loggedUser?.RoleID;
+    console.log('ROLE ID:',roleID);
     const fetchPermission = async () => {
       try {
         const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
         setPermission(response.data) ;
-
-        // Check authorization
-        const isManager:boolean = roleID === 2 ||roleID === 1; //Group manager  |  Hotel Manager
-        const hasReadPermission = response.data?.ReadPermission;
-
-        if (isManager && hasReadPermission) {
-          setIsAuthorized(true); // Allow access
-        } else {
-          setIsAuthorized(false); // Deny access
-        }
+        setPermissionsLoaded(true); // Indicate permissions are fully loaded
 
       } catch (error) {
         console.error('Error fetching logged-in user:', error);
+        setPermissionsLoaded(true); // Indicate permissions are fully loaded
       }
     };
     fetchPermission();
   }, [loggedUser?.RoleID])
 
   useEffect(() => {
-    if (loggedUser?.HotelID && isAuthorized ) {
-      const fetchOffersHotel = async () => {
-        try {
-          const response = await apiClient.get(`/hotels/getOffersHotelById/${loggedUser.HotelID}`);
-          const formattedOffers = response.data.map((offer: HotelOffers) => ({
-            ...offer,
-            StartDate: offer.StartDate.split('T')[0], // convert to YYYY-MM-DD
-            EndDate: offer.EndDate.split('T')[0], // convert to YYYY-MM-DD
-          }));
-          setHotelOffers(formattedOffers);
-        } catch (error) {
-          console.error('Error fetching hotel offers:', error);
-        }
-      };
+    if (permissionsLoaded) {
+      if (loggedUser?.HotelID && (loggedUser?.RoleID===2 || loggedUser?.RoleID===1) ) {
+        const fetchOffersHotel = async () => {
+          try {
+            const response = await apiClient.get(`/hotels/getOffersHotelById/${loggedUser.HotelID}`);
+            const formattedOffers = response.data.map((offer: HotelOffers) => ({
+              ...offer,
+              StartDate: offer.StartDate.split('T')[0], // convert to YYYY-MM-DD
+              EndDate: offer.EndDate.split('T')[0], // convert to YYYY-MM-DD
+            }));
+            setHotelOffers(formattedOffers);
+          } catch (error) {
+            console.error('Error fetching hotel offers:', error);
+          }
+        };
 
-      fetchOffersHotel();
+        fetchOffersHotel();
+      }
+    }
+  }, [loggedUser, isAuthorized]);
+
+  useEffect(() => {
+    if (permissionsLoaded) {
+      console.log('From use Permission',permissionsLoaded);
+      console.log('From use Effect', isAuthorizedOp)
+      if (loggedUser?.RoleID ===5 ) {
+        const fetchOffersHotel = async () => {
+          try {
+            const response = await apiClient.get('/hotels/findAllOffers');
+            const formattedOffers = response.data.map((offer: HotelOffers) => ({
+              ...offer,
+              StartDate: offer.StartDate.split('T')[0], // convert to YYYY-MM-DD
+              EndDate: offer.EndDate.split('T')[0], // convert to YYYY-MM-DD
+            }));
+            setHotelOffers(formattedOffers);
+          } catch (error) {
+            console.error('Error fetching hotel offers:', error);
+          }
+        };
+
+        fetchOffersHotel();
+      }
     }
   }, [loggedUser, isAuthorized]);
 
@@ -173,7 +194,7 @@ export default function HotelPage() {
   };
 
   // render this if the authorisation fails
-  if (!isAuthorized) {
+  if (isAuthorized === false && isAuthorizedOp ===false) {
     return (
       <div className="unauthorized-container">
         <h1>You are not allowed to visit this page.</h1>

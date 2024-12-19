@@ -82,6 +82,10 @@ export default function DashboardPage() {
         return `${day}-${month}-${year}`; 
     };
 
+    const handleOperator = () =>{
+        navigate('/hotelPage');
+    }
+
 
     return (
 
@@ -110,12 +114,16 @@ export default function DashboardPage() {
                         <p className='subtitleDashboard'>Find exclusive journey offers in every corner of the world!</p>
                     </div>
                 )}
-
             </div>
 
-            
-              {/* Hotel Offers */}
-              <div>
+            {loggedUser && loggedUser.RoleID === 5 &&(
+                    <div className="container text-centered" >
+                        <button className='save-button' onClick={handleOperator}> Operate </button>
+                    </div>
+                )}
+
+            {loggedUser && loggedUser.RoleID !== 5 && (
+            <div>
                 <h1 className='mt-5 mb-5'>Discover our offers</h1>
                 <table className="table table-bordered">
                     <thead>
@@ -150,6 +158,7 @@ export default function DashboardPage() {
                     </tbody>
                 </table>
             </div>
+            )}
         </div>
     );
 }
