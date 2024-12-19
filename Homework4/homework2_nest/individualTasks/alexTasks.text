@@ -16,8 +16,8 @@ Tasks Done :
         Token decoded and saved into localStorage
         Navbar
         Buttons on Navbar logic and implementation (for navigation) 50%
-        Manage offers using Hotel Page by hotel managers after clicking link
-        
 
-        //TO-DO : Using JWT we can include the roleName into the payload in order to be able to see which kind of user is logged in / let just hotelManager to work with offers for its hotel.
-        ///NOTHING
+        Manage offers using Hotel Page by hotel managers after clicking link:
+                Hotel managers can now interact with the offers from their hotel (CRUD operations)
+                new service and controller route for retrieving, delete, update, create offers 
+                
