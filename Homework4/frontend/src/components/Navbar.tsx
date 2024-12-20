@@ -27,6 +27,9 @@ const Navbar: React.FC = () => {
     navigate('/register');
   };
 
+  const handlerGoToDashboardClick = () => {
+    navigate('/dashboard');
+  };
 
   const handlerLogoutClick = () => {
     localStorage.removeItem('token');
@@ -50,9 +53,9 @@ const Navbar: React.FC = () => {
       <a
         className="navbar-brand"
         href="/"
-        style={{ fontSize: '20px', fontWeight: 'bold' }}
+        style={{ fontSize: '20px', fontWeight: 'bold', marginLeft:'40px' }}
       >
-        Hotel Management
+        Hotel Scanner
       </a>
       <div className="d-flex ms-auto">
         {/* Conditional display based on current page status */}
@@ -100,21 +103,30 @@ const Navbar: React.FC = () => {
           <>   
              <button
               className="btn btn-outline-danger"
-              onClick={handlerLogoutClick}
+              onClick={handlerGoToDashboardClick}
             >
-              Logout
+              Go to Dashboard
             </button>
           </>
         ) : location.pathname === '/administrationPage' ? (
           <>   
              <button
               className="btn btn-outline-danger"
-              onClick={handlerLogoutClick}
+              onClick={handlerGoToDashboardClick}
             >
-              Logout
+              Go to Dashboard
             </button> 
           </>
-        ) : null}
+        ) : location.pathname === '/hotelPage' ? (
+          <>   
+             <button
+              className="btn btn-outline-danger"
+              onClick={handlerGoToDashboardClick}
+            >
+              Back to Dashboard
+            </button> 
+          </>
+        ): null}
       </div>
     </div>
   </nav>

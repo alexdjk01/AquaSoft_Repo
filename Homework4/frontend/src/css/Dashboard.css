@@ -11,6 +11,10 @@
     height: 300px;
 }
 
+.text{
+    margin-left: 100px;
+}
+
 .titleDashboard{
     margin-top: 100px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;

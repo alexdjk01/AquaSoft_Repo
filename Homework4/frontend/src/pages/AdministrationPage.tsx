@@ -123,8 +123,9 @@ export default function AdministrationPage() {
 
   // Handle deletion of a user
   const handleDelete = async (id: number) => {
+    console.log('Used ID to delete: ',id);
     try {
-      await apiClient.delete(`/users/deleteUser/${id}`);
+      await apiClient.delete(`/users/${id}`);
       setUsers((prevUsers) => prevUsers.filter((user) => user.UserID !== id));
       alert('User deleted successfully!');
     } catch (error) {
@@ -242,7 +243,7 @@ export default function AdministrationPage() {
                   <td>
                     <button
                       onClick={() => handleDelete(user.UserID)}
-                      className="delete-button"
+                      className="btn btn-danger"
                     >
                       Delete
                     </button>

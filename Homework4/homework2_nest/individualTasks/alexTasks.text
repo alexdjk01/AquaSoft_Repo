@@ -24,3 +24,7 @@ Tasks Done :
         Permissions:
         Backend route for get permissions by roleID
         HotelPage that allows to view the data only users with a specific role and permission status.
+
+        Fixed : Operator to delete offers from hotelPAge
+        Fixed : Fronted to look better
+        Fixed : Add offer hotelPAge

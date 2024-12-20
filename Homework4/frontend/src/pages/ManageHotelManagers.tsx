@@ -1,9 +1,9 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import apiClient from '../apiTransferData/apiClient';
 import UserDashboard from '../interfaces/UserDashboard';
 import { jwtDecode } from 'jwt-decode';
 import Permission from '../interfaces/Permission';
-import '../css/Dashboard.css'; 
+import '../css/Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import '../css/ManageHotelManagers.css';
 
@@ -14,7 +14,7 @@ export default function ManageHotelManagers() {
     const [showManagers, setShowManagers] = useState<boolean>(false);
     const [linkURL, setLinkURL] = useState<string>('');
     const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-    const [permission,setPermission] = useState<Permission | null>(null);
+    const [permission, setPermission] = useState<Permission | null>(null);
     const navigate = useNavigate();
 
     // decode the token and get the current userId
@@ -40,31 +40,31 @@ export default function ManageHotelManagers() {
     }, []);
 
     //Check permission
-    useEffect( () => {
-        const roleID:number|undefined = loggedUser?.RoleID;
+    useEffect(() => {
+        const roleID: number | undefined = loggedUser?.RoleID;
         const fetchPermission = async () => {
-          try {
-            const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
-            setPermission(response.data) ;
-    
-            // Check authorization
-            const isManager:boolean = roleID === 2 || roleID === 1; //Group manager  |  Hotel Manager
-            const hasReadPermission = response.data?.ReadPermission;
-    
-            if (isManager && hasReadPermission) {
-              setIsAuthorized(true); // Allow access
-            } else {
-              setIsAuthorized(false); // Deny access
+            try {
+                const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
+                setPermission(response.data);
+
+                // Check authorization
+                const isManager: boolean = roleID === 2 || roleID === 1; //Group manager  |  Hotel Manager
+                const hasReadPermission = response.data?.ReadPermission;
+
+                if (isManager && hasReadPermission) {
+                    setIsAuthorized(true); // Allow access
+                } else {
+                    setIsAuthorized(false); // Deny access
+                }
+
+            } catch (error) {
+                console.error('Error fetching logged-in user:', error);
             }
-    
-          } catch (error) {
-            console.error('Error fetching logged-in user:', error);
-          }
         };
         fetchPermission();
-      },[loggedUser?.RoleID])
+    }, [loggedUser?.RoleID])
 
-    
+
 
     // get all the hotel managers with the same if as the hotel group manager
     useEffect(() => {
@@ -91,9 +91,9 @@ export default function ManageHotelManagers() {
             await apiClient.post('/users/createLinkByUserId', {
                 UserID: managerId,
                 LinkURL: linkURL,
-                
-            });
 
+            });
+            alert(`Link sent to manager ${managerId}: ${linkURL}`);
             console.log(`Link sent to manager ${managerId}: ${linkURL}`);
         } catch (error) {
             console.error('Error sending link to manager:', error);
@@ -108,25 +108,34 @@ export default function ManageHotelManagers() {
         setShowManagers((prev) => !prev);
     };
 
+    const handleGoToHotelPageLink = (linkStringURL: string) => {
+        if (linkStringURL.startsWith('http')) {
+            window.location.href = linkStringURL; // absolute URLs
+          } else {
+            navigate(linkStringURL); // relative URLs
+          }
+    };
+
+
     if (!isAuthorized) {
         return (
-          <div className="unauthorized-container">
-            <h1>You are not allowed to visit this page.</h1>
-            <button onClick={() => navigate('/dashboard')} className="go-back-button">
-              Turn Back
-            </button>
-          </div>
+            <div className="unauthorized-container">
+                <h1>You are not allowed to visit this page.</h1>
+                <button onClick={() => navigate('/dashboard')} className="go-back-button">
+                    Turn Back
+                </button>
+            </div>
         );
-      }
-    
+    }
 
 
-      return (
+
+    return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
             <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Hotel Group Manager Panel</h1>
 
-             {/* get infos about the current logged user */}
-             {loggedUser && (
+            {/* get infos about the current logged user */}
+            {loggedUser && (
                 <div className="logged-user-info" style={{ marginTop: '20px' }}>
                     <h3>Hello back, {loggedUser.Name} </h3>
                     <p><strong>Email:</strong> {loggedUser.Email}</p>
@@ -143,13 +152,19 @@ export default function ManageHotelManagers() {
                     value={linkURL}
                     onChange={handleLinkChange}  // Handle changes to the link input
                     placeholder="Enter a link"
-                    style={{ padding: '10px', width: '300px' }}
+                    style={{ padding: '10px', width: '300px', marginRight:'20px' }}
                 />
+                <button
+                    className="btn btn-info"
+                    onClick={() => handleGoToHotelPageLink(linkURL)} // Use an arrow function to call the handler
+                >
+                    Go to
+                </button>
             </div>
 
 
             {/* button for displaying/hide hotel managers with same group */}
-            <button onClick={toggleManagers} className="dashboard-button" style={{ marginTop: '20px' }}>
+            <button onClick={toggleManagers} className="btn btn-info" style={{ marginTop: '20px' }}>
                 {showManagers ? 'Hide Hotel Managers' : 'Show Hotel Managers'}
             </button>
 
@@ -175,9 +190,9 @@ export default function ManageHotelManagers() {
                                     <td>{manager.Name}</td>
                                     <td>{manager.Email}</td>
                                     <td>
-                                        <button 
+                                        <button
                                             onClick={() => handleSendLink(manager.UserID)}
-                                            className="send-link-button" 
+                                            className="send-link-button"
                                             style={{ padding: '5px 10px' }}
                                         >Send Link</button>
                                     </td>
@@ -188,5 +203,5 @@ export default function ManageHotelManagers() {
                 </div>
             )}
         </div>
-      );
+    );
 };

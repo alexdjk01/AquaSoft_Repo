@@ -33,7 +33,6 @@ export default function RegisterPage() {
             if(response.status === 201)
             {
                 setResultMessage('User has been registered successfully into the database!'); //In order to display an alert message message after
-                alert(resultMessage);
                 navigate('/login');
             }
         }

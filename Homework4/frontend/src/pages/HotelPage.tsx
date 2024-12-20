@@ -11,7 +11,7 @@ export default function HotelPage() {
   const [loggedUser, setLoggedUser] = useState<UserDashboard | null>(null);
   const [hotelOffers, setHotelOffers] = useState<HotelOffers[]>([]);
   const [editedOffers, setEditedOffers] = useState<HotelOffers[]>([]); // to store the edited offers
-  const [permission,setPermission] = useState<Permission | null>(null);
+  const [permission, setPermission] = useState<Permission | null>(null);
   const [newOffer, setNewOffer] = useState<HotelOffers | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [isAuthorizedOp, setIsAuthorizedOp] = useState<boolean>(false);
@@ -41,13 +41,13 @@ export default function HotelPage() {
   }, []);
 
   //check if the user has the rights to access this page
-  useEffect( () => {
-    const roleID:number|undefined = loggedUser?.RoleID;
-    console.log('ROLE ID:',roleID);
+  useEffect(() => {
+    const roleID: number | undefined = loggedUser?.RoleID;
+    console.log('ROLE ID:', roleID);
     const fetchPermission = async () => {
       try {
         const response = await apiClient.get(`/users/getPermissionByRoleId/${roleID}`);
-        setPermission(response.data) ;
+        setPermission(response.data);
         setPermissionsLoaded(true); // Indicate permissions are fully loaded
 
       } catch (error) {
@@ -60,7 +60,8 @@ export default function HotelPage() {
 
   useEffect(() => {
     if (permissionsLoaded) {
-      if (loggedUser?.HotelID && (loggedUser?.RoleID===2 || loggedUser?.RoleID===1) ) {
+      console.log('MANAGER', loggedUser?.HotelID && (loggedUser?.RoleID === 2 || loggedUser?.RoleID === 1));
+      if (loggedUser?.HotelID && (loggedUser?.RoleID === 2 || loggedUser?.RoleID === 1)) {
         const fetchOffersHotel = async () => {
           try {
             const response = await apiClient.get(`/hotels/getOffersHotelById/${loggedUser.HotelID}`);
@@ -82,9 +83,9 @@ export default function HotelPage() {
 
   useEffect(() => {
     if (permissionsLoaded) {
-      console.log('From use Permission',permissionsLoaded);
+      console.log('From use Permission', permissionsLoaded);
       console.log('From use Effect', isAuthorizedOp)
-      if (loggedUser?.RoleID ===5 ) {
+      if (loggedUser?.RoleID === 5) {
         const fetchOffersHotel = async () => {
           try {
             const response = await apiClient.get('/hotels/findAllOffers');
@@ -124,6 +125,7 @@ export default function HotelPage() {
         setHotelOffers((prev) => [...prev, response.data]); // Add new offer to the table
         setNewOffer(null); // Reset the new offer form
         alert('New offer added successfully!');
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error adding new offer:', error);
@@ -183,18 +185,28 @@ export default function HotelPage() {
 
   // delete one offer
   const handleDelete = async (id: number) => {
+    if (!loggedUser?.HotelID && loggedUser?.RoleID!==5) {
+      alert('HotelID is not available.');
+      return;
+    }
     try {
-      await apiClient.delete(`/hotels/deleteOfferById/${id}`);
-      setHotelOffers((prevOffers) => prevOffers.filter((offer) => offer.OfferID !== id));
-      alert('Offer deleted successfully!');
+      console.log(`Deleting offer with ID: ${id} from HotelID: ${loggedUser.HotelID}`);
+      const response = await apiClient.delete(`/hotels/deleteOfferById/${id}`);
+      if (response.status === 200) {
+        setHotelOffers((prevOffers) => prevOffers.filter((offer) => offer.OfferID !== id));
+        alert('Offer deleted successfully!');
+      } else {
+        console.error('Unexpected response:', response);
+        alert('Failed to delete offer.');
+      }
     } catch (error) {
       console.error('Error deleting offer:', error);
-      alert('Failed to delete offer.');
+      alert('Failed to delete offer. Please check the logs.');
     }
   };
 
   // render this if the authorisation fails
-  if (isAuthorized === false && isAuthorizedOp ===false) {
+  if (loggedUser?.RoleID !== 2 && loggedUser?.RoleID !== 1 && loggedUser?.RoleID !== 5) {
     return (
       <div className="unauthorized-container">
         <h1>You are not allowed to visit this page.</h1>
@@ -204,6 +216,9 @@ export default function HotelPage() {
       </div>
     );
   }
+
+
+
 
   return (
     <div className="hotel-page-container">
@@ -271,9 +286,9 @@ export default function HotelPage() {
         </div>
       </div>
 
-      
+
       <div className="table-container">
-      <h4>Edit or Delete existing offers</h4>
+        <h4>Edit or Delete existing offers</h4>
         <table className="hotel-table">
           <thead>
             <tr>
