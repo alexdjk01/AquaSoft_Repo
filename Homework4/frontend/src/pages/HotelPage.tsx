@@ -21,6 +21,18 @@ export default function HotelPage() {
   const [permissionsLoaded, setPermissionsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  const [newHotel, setNewHotel] = useState({
+    HotelID: '',
+    HotelName: '',
+    GroupID: '',
+    Address: '',
+    CityID: '',
+    RegionID: '',
+    Latitude: '',
+    Longitude: '',
+  });
+
+
   // decode the token and see infos about the current user that is logged into the page
   useEffect(() => {
     const jwtToken = localStorage.getItem('token');
@@ -59,44 +71,7 @@ export default function HotelPage() {
     }
   }, [loggedUser]);
 
-  // Method to track changes in hotel data
-  const handleHotelInputChange = (id: number, field: string, value: string) => {
-    const updatedHotels = hotels.map((hotel) =>
-      hotel.HotelID === id ? { ...hotel, [field]: value } : hotel
-    );
-    setHotels(updatedHotels);
 
-    const updatedEditedHotels = [...editedHotels];
-    const existingIndex = updatedEditedHotels.findIndex((hotel) => hotel.HotelID === id);
-
-    if (existingIndex > -1) {
-      updatedEditedHotels[existingIndex] = {
-        ...updatedEditedHotels[existingIndex],
-        [field]: value,
-      };
-    } else {
-      const updatedHotel = updatedHotels.find((hotel) => hotel.HotelID === id);
-      if (updatedHotel) updatedEditedHotels.push(updatedHotel);
-    }
-
-    setEditedHotels(updatedEditedHotels);
-  };
-
-  // Save edited hotel changes to the backend
-  const handleSaveHotelChanges = async () => {
-    try {
-      await Promise.all(
-        editedHotels.map((hotel) =>
-          apiClient.put(`/hotels/${hotel.HotelID}`, hotel)
-        )
-      );
-      alert('Hotel changes saved successfully!');
-      setEditedHotels([]);
-    } catch (error) {
-      console.error('Error saving hotel changes:', error);
-      alert('Failed to save hotel changes.');
-    }
-  };
 
   //check if the user has the rights to access this page
   useEffect(() => {
@@ -187,12 +162,78 @@ export default function HotelPage() {
     }
   }, [loggedUser, isAuthorized]);
 
+  // Method to track changes in hotel data
+  const handleHotelInputChange = (id: number, field: string, value: string) => {
+    const updatedHotels = hotels.map((hotel) =>
+      hotel.HotelID === id ? { ...hotel, [field]: value } : hotel
+    );
+    setHotels(updatedHotels);
+
+    const updatedEditedHotels = [...editedHotels];
+    const existingIndex = updatedEditedHotels.findIndex((hotel) => hotel.HotelID === id);
+
+    if (existingIndex > -1) {
+      updatedEditedHotels[existingIndex] = {
+        ...updatedEditedHotels[existingIndex],
+        [field]: value,
+      };
+    } else {
+      const updatedHotel = updatedHotels.find((hotel) => hotel.HotelID === id);
+      if (updatedHotel) updatedEditedHotels.push(updatedHotel);
+    }
+
+    setEditedHotels(updatedEditedHotels);
+  };
+
+  // Save edited hotel changes to the backend
+  const handleSaveHotelChanges = async () => {
+    try {
+      await Promise.all(
+        editedHotels.map((hotel) =>
+          apiClient.put(`/hotels/${hotel.HotelID}`, hotel)
+        )
+      );
+      alert('Hotel changes saved successfully!');
+      setEditedHotels([]);
+    } catch (error) {
+      console.error('Error saving hotel changes:', error);
+      alert('Failed to save hotel changes.');
+    }
+  };
+
   const handleNewOfferChange = (field: string, value: string) => {
     setNewOffer((prev) => ({
       ...prev,
       [field]: value,
       HotelID: loggedUser?.HotelID || 0, // Ensure the HotelID is attached
     } as HotelOffers));
+  };
+
+  const handleNewHotelChange = (field: string, value: string | number) => {
+    setNewHotel((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleAddHotel = async () => {
+    try {
+      const response = await apiClient.post('/hotels', {
+        ...newHotel,
+        HotelID: parseInt(newHotel.HotelID), // Ensure HotelID is a number
+        GroupID: parseInt(newHotel.GroupID),
+        CityID: newHotel.CityID ? parseInt(newHotel.CityID) : null,
+        RegionID: newHotel.RegionID ? parseInt(newHotel.RegionID) : null,
+        Latitude: newHotel.Latitude ? parseFloat(newHotel.Latitude) : null,
+        Longitude: newHotel.Longitude ? parseFloat(newHotel.Longitude) : null,
+      });
+      alert('Hotel added successfully!');
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error adding hotel:', error);
+      alert('Failed to add hotel.');
+    }
   };
 
   // Handle form submission to add a new offer
@@ -267,7 +308,7 @@ export default function HotelPage() {
 
   // delete one offer
   const handleDelete = async (id: number) => {
-    if (!loggedUser?.HotelID && loggedUser?.RoleID !== 5) {
+    if (!loggedUser?.HotelID && loggedUser?.RoleID !== 5 && loggedUser?.RoleID !== 2) {
       alert('HotelID is not available.');
       return;
     }
@@ -307,7 +348,7 @@ export default function HotelPage() {
       <h1 className="hotel-page-title">Hotel Offers</h1>
 
       {/* Add New Offer Form */}
-      {loggedUser.RoleID === 1  && (
+      {loggedUser.RoleID === 1 && (
         <div className="new-offer-form">
           <h4>Add new offer</h4>
           <div>
@@ -488,6 +529,65 @@ export default function HotelPage() {
       <button onClick={handleSaveChanges} className="save-button">
         Save Changes
       </button>
+
+      {loggedUser?.RoleID === 5 && (
+        <div className="new-hotel-form">
+          <h4>Add New Hotel</h4>
+          <div>
+            <input
+              type="number"
+              placeholder="Hotel ID"
+              value={newHotel.HotelID}
+              onChange={(e) => handleNewHotelChange('HotelID', e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Hotel Name"
+              value={newHotel.HotelName || ''}
+              onChange={(e) => handleNewHotelChange('HotelName', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Group ID"
+              value={newHotel.GroupID || ''}
+              onChange={(e) => handleNewHotelChange('GroupID', e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Address"
+              value={newHotel.Address || ''}
+              onChange={(e) => handleNewHotelChange('Address', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="City ID"
+              value={newHotel.CityID || ''}
+              onChange={(e) => handleNewHotelChange('CityID', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Region ID"
+              value={newHotel.RegionID || ''}
+              onChange={(e) => handleNewHotelChange('RegionID', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Latitude"
+              value={newHotel.Latitude || ''}
+              onChange={(e) => handleNewHotelChange('Latitude', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Longitude"
+              value={newHotel.Longitude || ''}
+              onChange={(e) => handleNewHotelChange('Longitude', e.target.value)}
+            />
+            <button className="save-button" onClick={handleAddHotel}>
+              Add Hotel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Hotel Table for Operator */}
       {loggedUser?.RoleID === 5 && (

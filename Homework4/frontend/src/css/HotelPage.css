@@ -76,3 +76,34 @@
   .delete-button:hover{
     background-color: red;
   }
+
+
+  .new-hotel-form {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .new-hotel-form input {
+    display: block;
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .new-hotel-form .save-button {
+    margin-top: 10px;
+    background-color: orange;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .new-hotel-form .save-button:hover {
+    background-color: darkorange;
+  }
