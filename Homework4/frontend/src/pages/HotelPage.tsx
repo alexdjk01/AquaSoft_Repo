@@ -60,8 +60,7 @@ export default function HotelPage() {
 
   useEffect(() => {
     if (permissionsLoaded) {
-      console.log('MANAGER', loggedUser?.HotelID && (loggedUser?.RoleID === 2 || loggedUser?.RoleID === 1));
-      if (loggedUser?.HotelID && (loggedUser?.RoleID === 2 || loggedUser?.RoleID === 1)) {
+      if (loggedUser?.HotelID &&  loggedUser?.RoleID === 1) {
         const fetchOffersHotel = async () => {
           try {
             const response = await apiClient.get(`/hotels/getOffersHotelById/${loggedUser.HotelID}`);
@@ -94,6 +93,31 @@ export default function HotelPage() {
               StartDate: offer.StartDate.split('T')[0], // convert to YYYY-MM-DD
               EndDate: offer.EndDate.split('T')[0], // convert to YYYY-MM-DD
             }));
+            setHotelOffers(formattedOffers);
+          } catch (error) {
+            console.error('Error fetching hotel offers:', error);
+          }
+        };
+
+        fetchOffersHotel();
+      }
+    }
+  }, [loggedUser, isAuthorized]);
+
+  useEffect(() => {
+    if (permissionsLoaded) {
+      if (loggedUser?.RoleID === 2) {
+        let userGroupId = loggedUser?.HotelGroupID;
+        console.log("User group id:", userGroupId);
+        const fetchOffersHotel = async () => {
+          try {
+            const response = await apiClient.get(`/hotels/getAllOffersByGroupId/${userGroupId}`);
+            const formattedOffers = response.data.map((offer: HotelOffers) => ({
+              ...offer,
+              StartDate: offer.StartDate.split('T')[0], // convert to YYYY-MM-DD
+              EndDate: offer.EndDate.split('T')[0], // convert to YYYY-MM-DD
+            }));
+            console.log(formattedOffers);
             setHotelOffers(formattedOffers);
           } catch (error) {
             console.error('Error fetching hotel offers:', error);
@@ -225,6 +249,7 @@ export default function HotelPage() {
       <h1 className="hotel-page-title">Hotel Offers</h1>
 
       {/* Add New Offer Form */}
+      {(loggedUser.RoleID ===1 || loggedUser.RoleID ===5) && (
       <div className="new-offer-form">
         <h4>Add new offer</h4>
         <div>
@@ -285,7 +310,7 @@ export default function HotelPage() {
           <button className='save-button' onClick={handleAddOffer}>Add Offer</button>
         </div>
       </div>
-
+      )}
 
       <div className="table-container">
         <h4>Edit or Delete existing offers</h4>

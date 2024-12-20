@@ -65,6 +65,11 @@ constructor(private readonly hotelsService: HotelsService) {}
         return this.hotelsService.findOffersHotelById(id);
     }
 
+    @Get('getAllOffersByGroupId/:groupId')
+    async findAllOffersByGroupId(@Param('groupId') groupId:number):Promise<HotelOffers[]>{
+        return this.hotelsService.findAllOffersByGroupId(groupId);
+    }
+
     @Post('addOffer')
     async addOffer(@Body() hotelOfferData:Partial<HotelOffers>):Promise<HotelOffers>{
         return this.hotelsService.issueOffer(hotelOfferData);
