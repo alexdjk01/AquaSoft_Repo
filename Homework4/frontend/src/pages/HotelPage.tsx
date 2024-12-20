@@ -3,6 +3,7 @@ import apiClient from '../apiTransferData/apiClient';
 import UserDashboard from '../interfaces/UserDashboard';
 import HotelOffers from '../interfaces/HotelOffer';
 import Permission from '../interfaces/Permission';
+import Hotel from '../interfaces/Hotel';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import '../css/HotelPage.css';
@@ -11,6 +12,8 @@ export default function HotelPage() {
   const [loggedUser, setLoggedUser] = useState<UserDashboard | null>(null);
   const [hotelOffers, setHotelOffers] = useState<HotelOffers[]>([]);
   const [editedOffers, setEditedOffers] = useState<HotelOffers[]>([]); // to store the edited offers
+  const [hotels, setHotels] = useState<Hotel[]>([]); // state for hotel data
+  const [editedHotels, setEditedHotels] = useState<Hotel[]>([]); // track edited hotels
   const [permission, setPermission] = useState<Permission | null>(null);
   const [newOffer, setNewOffer] = useState<HotelOffers | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
@@ -40,6 +43,61 @@ export default function HotelPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (loggedUser?.RoleID === 5) {
+      // Fetch hotel information for the operator
+      const fetchHotels = async () => {
+        try {
+          const response = await apiClient.get('/hotels'); // Fetch all hotel information
+          setHotels(response.data);
+        } catch (error) {
+          console.error('Error fetching hotels:', error);
+        }
+      };
+
+      fetchHotels();
+    }
+  }, [loggedUser]);
+
+  // Method to track changes in hotel data
+  const handleHotelInputChange = (id: number, field: string, value: string) => {
+    const updatedHotels = hotels.map((hotel) =>
+      hotel.HotelID === id ? { ...hotel, [field]: value } : hotel
+    );
+    setHotels(updatedHotels);
+
+    const updatedEditedHotels = [...editedHotels];
+    const existingIndex = updatedEditedHotels.findIndex((hotel) => hotel.HotelID === id);
+
+    if (existingIndex > -1) {
+      updatedEditedHotels[existingIndex] = {
+        ...updatedEditedHotels[existingIndex],
+        [field]: value,
+      };
+    } else {
+      const updatedHotel = updatedHotels.find((hotel) => hotel.HotelID === id);
+      if (updatedHotel) updatedEditedHotels.push(updatedHotel);
+    }
+
+    setEditedHotels(updatedEditedHotels);
+  };
+
+  // Save edited hotel changes to the backend
+  const handleSaveHotelChanges = async () => {
+    try {
+      await Promise.all(
+        editedHotels.map((hotel) =>
+          apiClient.put(`/hotels/${hotel.HotelID}`, hotel)
+        )
+      );
+      alert('Hotel changes saved successfully!');
+      setEditedHotels([]);
+    } catch (error) {
+      console.error('Error saving hotel changes:', error);
+      alert('Failed to save hotel changes.');
+    }
+  };
+
   //check if the user has the rights to access this page
   useEffect(() => {
     const roleID: number | undefined = loggedUser?.RoleID;
@@ -60,7 +118,7 @@ export default function HotelPage() {
 
   useEffect(() => {
     if (permissionsLoaded) {
-      if (loggedUser?.HotelID &&  loggedUser?.RoleID === 1) {
+      if (loggedUser?.HotelID && loggedUser?.RoleID === 1) {
         const fetchOffersHotel = async () => {
           try {
             const response = await apiClient.get(`/hotels/getOffersHotelById/${loggedUser.HotelID}`);
@@ -209,7 +267,7 @@ export default function HotelPage() {
 
   // delete one offer
   const handleDelete = async (id: number) => {
-    if (!loggedUser?.HotelID && loggedUser?.RoleID!==5) {
+    if (!loggedUser?.HotelID && loggedUser?.RoleID !== 5) {
       alert('HotelID is not available.');
       return;
     }
@@ -249,67 +307,67 @@ export default function HotelPage() {
       <h1 className="hotel-page-title">Hotel Offers</h1>
 
       {/* Add New Offer Form */}
-      {(loggedUser.RoleID ===1 || loggedUser.RoleID ===5) && (
-      <div className="new-offer-form">
-        <h4>Add new offer</h4>
-        <div>
-          <input
-            type="text"
-            placeholder="Offer Name"
-            value={newOffer?.OfferName || ''}
-            onChange={(e) => handleNewOfferChange('OfferName', e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Description"
-            value={newOffer?.Description || ''}
-            onChange={(e) => handleNewOfferChange('Description', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Economy Price"
-            value={newOffer?.PriceEconomy || ''}
-            onChange={(e) => handleNewOfferChange('PriceEconomy', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Standard Price"
-            value={newOffer?.PriceStandard || ''}
-            onChange={(e) => handleNewOfferChange('PriceStandard', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Deluxe Price"
-            value={newOffer?.PriceDeluxe || ''}
-            onChange={(e) => handleNewOfferChange('PriceDeluxe', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Suite Price"
-            value={newOffer?.PriceSuite || ''}
-            onChange={(e) => handleNewOfferChange('PriceSuite', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Luxury Price"
-            value={newOffer?.PriceLuxury || ''}
-            onChange={(e) => handleNewOfferChange('PriceLuxury', e.target.value)}
-          />
-          <input
-            type="date"
-            placeholder="Start Date"
-            value={newOffer?.StartDate || ''}
-            onChange={(e) => handleNewOfferChange('StartDate', e.target.value)}
-          />
-          <input
-            type="date"
-            placeholder="End Date"
-            value={newOffer?.EndDate || ''}
-            onChange={(e) => handleNewOfferChange('EndDate', e.target.value)}
-          />
-          <button className='save-button' onClick={handleAddOffer}>Add Offer</button>
+      {loggedUser.RoleID === 1  && (
+        <div className="new-offer-form">
+          <h4>Add new offer</h4>
+          <div>
+            <input
+              type="text"
+              placeholder="Offer Name"
+              value={newOffer?.OfferName || ''}
+              onChange={(e) => handleNewOfferChange('OfferName', e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Description"
+              value={newOffer?.Description || ''}
+              onChange={(e) => handleNewOfferChange('Description', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Economy Price"
+              value={newOffer?.PriceEconomy || ''}
+              onChange={(e) => handleNewOfferChange('PriceEconomy', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Standard Price"
+              value={newOffer?.PriceStandard || ''}
+              onChange={(e) => handleNewOfferChange('PriceStandard', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Deluxe Price"
+              value={newOffer?.PriceDeluxe || ''}
+              onChange={(e) => handleNewOfferChange('PriceDeluxe', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Suite Price"
+              value={newOffer?.PriceSuite || ''}
+              onChange={(e) => handleNewOfferChange('PriceSuite', e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Luxury Price"
+              value={newOffer?.PriceLuxury || ''}
+              onChange={(e) => handleNewOfferChange('PriceLuxury', e.target.value)}
+            />
+            <input
+              type="date"
+              placeholder="Start Date"
+              value={newOffer?.StartDate || ''}
+              onChange={(e) => handleNewOfferChange('StartDate', e.target.value)}
+            />
+            <input
+              type="date"
+              placeholder="End Date"
+              value={newOffer?.EndDate || ''}
+              onChange={(e) => handleNewOfferChange('EndDate', e.target.value)}
+            />
+            <button className='save-button' onClick={handleAddOffer}>Add Offer</button>
+          </div>
         </div>
-      </div>
       )}
 
       <div className="table-container">
@@ -430,6 +488,71 @@ export default function HotelPage() {
       <button onClick={handleSaveChanges} className="save-button">
         Save Changes
       </button>
+
+      {/* Hotel Table for Operator */}
+      {loggedUser?.RoleID === 5 && (
+        <div className="table-container">
+          <h4>Edit Hotel Information</h4>
+          <table className="hotel-table">
+            <thead>
+              <tr>
+                <th>Hotel Name</th>
+                <th>Address</th>
+                <th>Region</th>
+                <th>City</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {hotels.map((hotel) => (
+                <tr key={hotel.HotelID}>
+                  <td>
+                    <input
+                      type="text"
+                      value={hotel.HotelName}
+                      onChange={(e) =>
+                        handleHotelInputChange(hotel.HotelID, 'HotelName', e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={hotel.Address}
+                      onChange={(e) =>
+                        handleHotelInputChange(hotel.HotelID, 'Address', e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={hotel.RegionID}
+                      onChange={(e) =>
+                        handleHotelInputChange(hotel.HotelID, 'Region', e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={hotel.CityID}
+                      onChange={(e) =>
+                        handleHotelInputChange(hotel.HotelID, 'City', e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <button onClick={handleSaveHotelChanges} className="save-button">
+                      Save Changes
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
